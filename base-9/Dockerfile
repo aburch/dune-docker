@@ -13,11 +13,14 @@ RUN apt-get install --no-install-recommends --yes \
   flex \
   gfortran \
   git \
+  libadolc-dev \
+  libtinyxml2-dev \
   libltdl-dev \
   libtool \
   mpi-default-bin \
   mpi-default-dev \
   openssh-client \
+  python-dev \
   && apt-get clean
 RUN adduser --disabled-password --home /duneci duneci
 USER duneci
