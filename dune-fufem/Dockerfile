@@ -1,4 +1,4 @@
-FROM dune:2.4
+FROM duneci/dune:2.4
 RUN mkdir modules
 
 WORKDIR /dune/modules
