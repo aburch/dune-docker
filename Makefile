@@ -1,4 +1,4 @@
-all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-latest-stamp
+all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
 
 clean:
 	rm -f -- ./*-stamp
@@ -31,4 +31,8 @@ dune-git-stamp: base-9-stamp dune-git/Dockerfile
 
 dune-latest-stamp: dune-2.4-stamp
 	docker tag -f duneci/dune:2.4 duneci/dune:latest
+	touch $@
+
+dune-fufem-latest-stamp: dune-fufem-stamp
+	docker tag -f duneci/dune-fufem:2.4 duneci/dune-fufem:latest
 	touch $@
