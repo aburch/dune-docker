@@ -20,6 +20,7 @@ RUN apt-get install --no-install-recommends --yes \
   mpi-default-bin \
   mpi-default-dev \
   openssh-client \
+  pkg-config \
   python-dev \
   && apt-get clean
 RUN adduser --disabled-password --home /duneci duneci
