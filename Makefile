@@ -1,4 +1,4 @@
-all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-latest-stamp
+all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
 
 clean:
 	rm -f -- ./*-stamp
@@ -20,9 +20,19 @@ dune-2.4-stamp: base-9-stamp dune-2.4/Dockerfile
 	touch $@
 
 dune-fufem-stamp: dune-fufem/Dockerfile dune-2.4-stamp
-	docker build -t duneci/dune-fufem dune-fufem
+	docker build -t duneci/dune-fufem:2.4 dune-fufem
+	touch $@
+
+dune-git-stamp: base-9-stamp dune-git/Dockerfile
+	docker build -t duneci/dune:git-staging dune-git
+	docker run -i duneci/dune:git-staging sh -c "dunecontrol make build_tests && dunecontrol make test"
+	docker tag -f duneci/dune:git-staging duneci/dune:git
 	touch $@
 
 dune-latest-stamp: dune-2.4-stamp
-	docker tag -f duneci/dune:2.4 dune:latest
+	docker tag -f duneci/dune:2.4 duneci/dune:latest
+	touch $@
+
+dune-fufem-latest-stamp: dune-fufem-stamp
+	docker tag -f duneci/dune-fufem:2.4 duneci/dune-fufem:latest
 	touch $@
