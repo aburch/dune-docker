@@ -23,6 +23,12 @@ dune-fufem-stamp: dune-fufem/Dockerfile dune-2.4-stamp
 	docker build -t duneci/dune-fufem:2.4 dune-fufem
 	touch $@
 
+dune-git-stamp: base-9-stamp dune-git/Dockerfile
+	docker build -t duneci/dune:git-staging dune-git
+	docker run -i duneci/dune:git-staging sh -c "dunecontrol make build_tests && dunecontrol make test"
+	docker tag -f duneci/dune:git-staging duneci/dune:git
+	touch $@
+
 dune-latest-stamp: dune-2.4-stamp
 	docker tag -f duneci/dune:2.4 duneci/dune:latest
 	touch $@
