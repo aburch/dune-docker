@@ -12,7 +12,8 @@ The current images are:
 | duneci/base:9            | debian:9        | Debian 9 with gcc 5.3.1, clang 3.6, cmake 3.4.1        |
 | duneci/dune:2.3          | duneci/base:8   | DUNE 2.3 core modules from Debian                      |
 | duneci/dune:2.4          | duneci/base:9   | DUNE 2.4 core modules from Debian                      |
-| duneci/dune-fufem:latest | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches) |
+| duneci/dune:git          | duneci/base:9   | DUNE 3.0-dev snapshot                                  |
+| duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches) |
 
 `.gitlab-ci.yml`
 ----------------
@@ -36,6 +37,7 @@ dune:2.3--clang:
 You can also specify a default image and use it in several jobs:
 
 ```
+---
 image: duneci/dune:2.4
 
 dune:2.4--gcc:
