@@ -20,9 +20,9 @@ dune-2.4-stamp: base-9-stamp dune-2.4/Dockerfile
 	touch $@
 
 dune-fufem-stamp: dune-fufem/Dockerfile dune-2.4-stamp
-	docker build -t duneci/dune-fufem dune-fufem
+	docker build -t duneci/dune-fufem:2.4 dune-fufem
 	touch $@
 
 dune-latest-stamp: dune-2.4-stamp
-	docker tag -f duneci/dune:2.4 dune:latest
+	docker tag -f duneci/dune:2.4 duneci/dune:latest
 	touch $@
