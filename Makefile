@@ -20,7 +20,7 @@ dune-2.4-stamp: base-9-stamp dune-2.4/Dockerfile
 	touch $@
 
 dune-fufem-stamp: dune-fufem/Dockerfile dune-2.4-stamp
-	docker build -t duneci/dune-fufem:2.4 dune-fufem
+	docker build --no-cache -t duneci/dune-fufem:2.4 dune-fufem
 	touch $@
 
 dune-git-stamp: base-9-stamp dune-git/Dockerfile

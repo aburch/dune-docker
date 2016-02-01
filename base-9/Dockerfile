@@ -14,6 +14,7 @@ RUN apt-get install --no-install-recommends --yes \
   gfortran \
   git \
   libadolc-dev \
+  libboost-dev \
   libtinyxml2-dev \
   libltdl-dev \
   libtool \
