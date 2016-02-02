@@ -1,4 +1,13 @@
 FROM duneci/dune:2.4
+
+USER root
+WORKDIR /
+RUN apt-get install --no-install-recommends --yes \
+  libdune-grid-glue-dev \
+  && apt-get clean
+
+USER duneci
+WORKDIR /duneci
 RUN mkdir -p modules
 
 WORKDIR /duneci/modules
