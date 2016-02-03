@@ -11,7 +11,7 @@ WORKDIR /duneci
 RUN mkdir -p modules
 
 WORKDIR /duneci/modules
-RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git
+RUN git clone -b releases/2.4-1 https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git
 RUN git clone -b releases/2.4-1 https://git.imp.fu-berlin.de/agnumpde/dune-fufem.git
 RUN git clone -b releases/2.4-compatible https://gitlab.dune-project.org/staging/dune-functions.git
 RUN git clone -b releases/2.4-1 https://git.imp.fu-berlin.de/agnumpde/dune-solvers.git
