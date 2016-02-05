@@ -2,13 +2,13 @@ FROM duneci/base:9
 
 USER root
 WORKDIR /
-RUN apt-get install --no-install-recommends --yes \
+RUN apt-get update && apt-get install --no-install-recommends --yes \
   gnuplot-nox \
   libscotchmetis-dev \
   libug-dev \
   locales-all \
   python-vtk6 \
-  && apt-get clean
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 USER duneci
 WORKDIR /duneci

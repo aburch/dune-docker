@@ -2,9 +2,9 @@ FROM duneci/dune:2.4
 
 USER root
 WORKDIR /
-RUN apt-get install --no-install-recommends --yes \
+RUN apt-get update && apt-get install --no-install-recommends --yes \
   libdune-grid-glue-dev \
-  && apt-get clean
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 USER duneci
 WORKDIR /duneci

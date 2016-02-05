@@ -1,7 +1,7 @@
 FROM debian:stretch
 MAINTAINER Ansgar.Burchardt@tu-dresden.de
-RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes
-RUN apt-get install --no-install-recommends --yes \
+RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
+  && apt-get install --no-install-recommends --yes \
   autoconf \
   automake \
   bison \
@@ -23,7 +23,7 @@ RUN apt-get install --no-install-recommends --yes \
   openssh-client \
   python-dev \
   pkg-config \
-  && apt-get clean
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci duneci
 USER duneci
 WORKDIR /duneci
