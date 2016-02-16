@@ -1,0 +1,18 @@
+#! /bin/sh
+
+set -e
+set -u
+
+logdir="${HOME}/log/$(date +%Y)"
+dockerdir="${HOME}/dune-docker"
+logfile="${logdir}/$(date +%Y-%m-%d)"
+
+mkdir -p -- "${logdir}"
+
+cd "${dockerdir}"
+
+rm -f dune-git-stamp
+make dune-git-stamp > "${logfile}-dune-git" 2>&1
+
+rm -f dune-fufem-git-stamp
+make dune-fufem-git-stamp > "${logfile}-dune-fufem-git" 2>&1
