@@ -30,4 +30,5 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
 RUN adduser --disabled-password --home /duneci duneci
 USER duneci
 WORKDIR /duneci
+RUN mkdir -p /duneci/modules
 COPY opts.clang opts.gcc /duneci/

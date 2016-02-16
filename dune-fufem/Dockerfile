@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 USER duneci
-WORKDIR /duneci
-RUN mkdir -p modules
-
 WORKDIR /duneci/modules
 RUN git clone -b releases/2.4-1 https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git
 RUN git clone -b releases/2.4-1 https://git.imp.fu-berlin.de/agnumpde/dune-fufem.git

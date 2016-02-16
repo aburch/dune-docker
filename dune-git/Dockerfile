@@ -11,8 +11,6 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 USER duneci
-WORKDIR /duneci
-RUN mkdir -p modules
 WORKDIR /duneci/modules
 RUN git clone https://gitlab.dune-project.org/core/dune-common.git
 RUN git clone https://gitlab.dune-project.org/core/dune-geometry.git

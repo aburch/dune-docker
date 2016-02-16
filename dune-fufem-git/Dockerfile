@@ -1,9 +1,6 @@
 FROM duneci/dune:git
 
 USER duneci
-WORKDIR /duneci
-RUN mkdir -p modules
-
 WORKDIR /duneci/modules
 RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git
 RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-fufem.git
