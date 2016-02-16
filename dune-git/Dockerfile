@@ -25,4 +25,3 @@ RUN ln -s /duneci/modules/dune-common/bin/dunecontrol /usr/local/bin/
 
 USER duneci
 WORKDIR /duneci
-ENV DUNE_CONTROL_PATH=.:/duneci/modules

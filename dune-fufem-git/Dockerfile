@@ -11,4 +11,3 @@ RUN git clone https://gitlab.dune-project.org/pdelab/dune-typetree.git
 RUN dunecontrol all
 
 WORKDIR /duneci
-ENV DUNE_CONTROL_PATH=.:/duneci/modules

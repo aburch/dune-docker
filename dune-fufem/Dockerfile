@@ -16,4 +16,3 @@ RUN git clone -b releases/2.4 https://gitlab.dune-project.org/pdelab/dune-typetr
 RUN dunecontrol all
 
 WORKDIR /duneci
-ENV DUNE_CONTROL_PATH=.:/duneci/modules

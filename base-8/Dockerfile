@@ -31,4 +31,5 @@ RUN adduser --disabled-password --home /duneci duneci
 USER duneci
 WORKDIR /duneci
 RUN mkdir -p /duneci/modules
+ENV DUNE_CONTROL_PATH=.:/duneci/modules
 COPY opts.clang opts.gcc /duneci/
