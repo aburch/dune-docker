@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Clean up left-overs from Docker.
+
+set -e
+set -u
+
+docker rm $(docker ps -a -q -f status=exited)
+docker rmi $(docker images --filter dangling=true -q)
