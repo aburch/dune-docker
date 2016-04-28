@@ -4,6 +4,7 @@ USER root
 WORKDIR /
 RUN apt-get update && apt-get install --no-install-recommends --yes \
   gnuplot-nox \
+  libalberta-dev \
   libscotchmetis-dev \
   libug-dev \
   locales-all \
