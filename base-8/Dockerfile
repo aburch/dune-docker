@@ -17,7 +17,10 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   git \
   libadolc-dev \
   libboost-dev \
+  libboost-program-options-dev \
   libboost-serialization-dev \
+  libboost-system-dev \
+  libgtest-dev \
   libtinyxml2-dev \
   libltdl-dev \
   libtool \
