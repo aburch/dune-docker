@@ -22,14 +22,14 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   libboost-serialization-dev \
   libboost-system-dev \
   libgtest-dev \
-  libtinyxml2-dev \
   libltdl-dev \
+  libtinyxml2-dev \
   libtool \
   mpi-default-bin \
   mpi-default-dev \
   openssh-client \
-  python-dev \
   pkg-config \
+  python-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci duneci
 USER duneci

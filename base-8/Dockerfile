@@ -22,8 +22,8 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   libboost-serialization-dev \
   libboost-system-dev \
   libgtest-dev \
-  libtinyxml2-dev \
   libltdl-dev \
+  libtinyxml2-dev \
   libtool \
   mpi-default-bin \
   mpi-default-dev \
