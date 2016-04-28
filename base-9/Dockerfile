@@ -12,6 +12,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   clang \
   cmake \
   coinor-libipopt-dev \
+  curl \
   flex \
   gfortran \
   git \
