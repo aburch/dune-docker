@@ -51,3 +51,24 @@ dune:2.4--clang:
   - configure CXX=/usr/bin/clang++
   - build
 ```
+
+Updating gitlab-runner
+----------------------
+
+To update `gitlab-runner` on the VM:
+
+```
+docker pull gitlab/gitlab-runner:latest
+docker stop gitlab-runner
+docker rm -v gitlab-runner
+docker run -d --name gitlab-runner --restart always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner \
+  gitlab/gitlab-runner:latest
+```
+
+The current version can be shown by running
+
+```
+docker exec -it gitlab-runner gitlab-runner -v
+```
