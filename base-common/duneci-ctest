@@ -67,7 +67,7 @@ def runCTest(argv=[]):
            "--no-compress-output",
     ]
     cmd.extend(argv)
-    subprocess.run(cmd, check=False)
+    subprocess.call(cmd)
 
 def checkDirectory():
     if not os.path.exists("CMakeCache.txt"):
