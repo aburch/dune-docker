@@ -48,7 +48,7 @@ def findCTestOutput():
 
 def handleCTestOutput():
     path = findCTestOutput()
-    with open(path, "r") as fh:
+    with open(path, "r", encoding="latin-1") as fh:
         tree = xml.etree.ElementTree.parse(fh)
     root = tree.getroot()
     testing = root.find("Testing")
