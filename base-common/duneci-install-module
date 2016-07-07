@@ -1,0 +1,30 @@
+#! /bin/bash
+# Author: Ansgar Burchardt <Ansgar.Burchardt@tu-dresden.de>
+
+set -e
+
+usage() {
+    echo "usage: duneci-install-module <Git-repository> <dunecontrol-opts>" >&2
+    exit ${1:-0}
+}
+
+if [[ $# -eq 0 ]]; then
+    usage 0
+fi
+
+repo="${1}"
+module="${repo##*/}"; module="${module%.git}"
+shift
+
+if [[ "${module}" = dune-common ]]; then
+    ln -sf /duneci/modules/dune-common/bin/dunecontrol /duneci/bin
+fi
+
+cd /duneci/modules
+if [[ -d "${module}" ]]; then
+    echo "Module ${module} is already installed." >&2
+    exit 1
+fi
+
+git clone "${repo}"
+dunecontrol --opts=/duneci/opts.gcc "${@}" --only="${module}" all

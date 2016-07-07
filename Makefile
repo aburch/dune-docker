@@ -3,14 +3,17 @@ all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp du
 clean:
 	rm -f -- ./*-stamp
 	rm -f -- base-8/duneci-ctest base-9/duneci-ctest
+	rm -f -- base-8/duneci-install-module base-9/duneci-install-module
 
-base-8-stamp: base-8/Dockerfile base-common/duneci-ctest
-	cp base-common/duneci-ctest base-8/duneci-ctest
+base-8-stamp: base-8/Dockerfile base-common/duneci-ctest base-common/duneci-install-module
+	cp base-common/duneci-ctest base-8/
+	cp base-common/duneci-install-module base-8/
 	docker build --no-cache -t duneci/base:8 base-8
 	touch $@
 
-base-9-stamp: base-9/Dockerfile base-common/duneci-ctest
-	cp base-common/duneci-ctest base-9/duneci-ctest
+base-9-stamp: base-9/Dockerfile base-common/duneci-ctest base-common/duneci-install-module
+	cp base-common/duneci-ctest base-9/
+	cp base-common/duneci-install-module base-9/
 	docker build --no-cache -t duneci/base:9 base-9
 	touch $@
 
