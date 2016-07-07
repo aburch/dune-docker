@@ -35,6 +35,8 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
 RUN adduser --disabled-password --home /duneci duneci
 USER duneci
 WORKDIR /duneci
-RUN mkdir -p /duneci/modules
+RUN mkdir -p /duneci/bin /duneci/modules
 ENV DUNE_CONTROL_PATH=.:/duneci/modules
+ENV PATH=/duneci/bin:$PATH
 COPY opts.clang opts.gcc /duneci/
+COPY duneci-ctest /duneci/bin/
