@@ -29,17 +29,19 @@ before_script:
 To build with several images:
 ```
 ---
-dune:2.3--gcc:
-  image: duneci/dune:2.3
+dune:2.4--gcc:
+  image: duneci/dune:2.4
   script:
-  - configure
-  - build
+  - dunecontrol --current all
+  - dunecontrol --current make build_tests
+  - cd build-cmake; duneci-ctest
 
-dune:2.3--clang:
-  image: duneci/dune:2.3
+dune:2.4--clang:
+  image: duneci/dune:2.4
   script:
-  - configure CXX=/usr/bin/clang++
-  - build
+  - dunecontrol --current --opts=/duneci/opts.clang all
+  - dunecontrol --current make build_tests
+  - cd build-cmake; duneci-ctest
 ```
 
 You can also specify a default image and use it in several jobs:
@@ -50,13 +52,15 @@ image: duneci/dune:2.4
 
 dune:2.4--gcc:
   script:
-  - configure
-  - build
+  - dunecontrol --current all
+  - dunecontrol --current make build_tests
+  - cd build-cmake; duneci-ctest
 
 dune:2.4--clang:
   script:
-  - configure CXX=/usr/bin/clang++
-  - build
+  - dunecontrol --current --opts=/duneci/opts.clang all
+  - dunecontrol --current make build_tests
+  - cd build-cmake; duneci-ctest
 ```
 
 Updating gitlab-runner
