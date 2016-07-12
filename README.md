@@ -19,6 +19,13 @@ The current images are:
 `.gitlab-ci.yml`
 ----------------
 
+Installing dependencies:
+```
+before_script:
+  - duneci-install-module https://gitlab.dune-project.org/core/dune-common.git
+  - duneci-install-module https://gitlab.dune-project.org/core/dune-geometry.git
+```
+
 To build with several images:
 ```
 ---
