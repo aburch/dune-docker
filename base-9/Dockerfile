@@ -25,6 +25,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   libltdl-dev \
   libtinyxml2-dev \
   libtool \
+  locales-all \
   mpi-default-bin \
   mpi-default-dev \
   openssh-client \
