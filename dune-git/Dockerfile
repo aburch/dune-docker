@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
   libalberta-dev \
   libscotchmetis-dev \
   libug-dev \
-  locales-all \
   python-vtk6 \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
