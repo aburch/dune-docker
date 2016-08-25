@@ -9,7 +9,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   bison \
   build-essential \
   ca-certificates \
-  clang \
+  clang-3.8 \
   cmake \
   coinor-libipopt-dev \
   curl \
