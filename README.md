@@ -77,6 +77,17 @@ docker run -d --name gitlab-runner --restart always \
   -v /srv/gitlab-runner/config:/etc/gitlab-runner \
   gitlab/gitlab-runner:latest
 ```
+or, if a HTTP proxy is required,
+```
+docker run -d --name gitlab-runner --restart always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner \
+  -e ftp_proxy=${ftp_proxy} -e FTP_PROXY=${FTP_PROXY} \
+  -e http_proxy=${http_proxy} -e HTTP_PROXY=${HTTP_PROXY} \
+  -e https_proxy=${https_proxy} -e HTTPS_PROXY=${HTTPS_PROXY} \
+  -e no_proxy=${no_proxy} -e NO_PROXY=${NO_PROXY} \
+  gitlab/gitlab-runner:latest
+```
 
 The current version can be shown by running
 
