@@ -94,5 +94,5 @@ docker run -d --name gitlab-runner --restart always \
 The current version can be shown by running
 
 ```
-docker exec -it gitlab-runner gitlab-runner -v
+docker exec gitlab-runner gitlab-runner -v
 ```
