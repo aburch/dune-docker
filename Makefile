@@ -1,4 +1,4 @@
-all: base-8-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
+all: base-8-stamp base-8-backports-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
 
 clean:
 	rm -f -- ./*-stamp
@@ -37,6 +37,10 @@ base-8-stamp: base-8/Dockerfile base-common/duneci-ctest base-common/duneci-inst
 	cp base-common/duneci-ctest base-8/
 	cp base-common/duneci-install-module base-8/
 	$(docker-build) --no-cache -t duneci/base:8 base-8
+	touch $@
+
+base-8-backports-stamp: base-8-backports/Dockerfile base-8-backports/opts.clang
+	$(docker-build) -t duneci/base:8-backports base-8-backports
 	touch $@
 
 base-9-stamp: base-9/Dockerfile base-common/duneci-ctest base-common/duneci-install-module
