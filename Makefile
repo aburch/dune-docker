@@ -1,9 +1,9 @@
-all: base-8-stamp base-8-backports-stamp base-9-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
+all: base-8-stamp base-8-backports-stamp base-9-stamp base-16.04-stamp dune-2.3-stamp dune-2.4-stamp dune-fufem-stamp dune-fufem-latest-stamp dune-latest-stamp
 
 clean:
 	rm -f -- ./*-stamp
-	rm -f -- base-8/duneci-ctest base-9/duneci-ctest
-	rm -f -- base-8/duneci-install-module base-9/duneci-install-module
+	rm -f -- base-8/duneci-ctest base-9/duneci-ctest base-16.04/duneci-ctest
+	rm -f -- base-8/duneci-install-module base-9/duneci-install-module base-16.04/duneci-install-module
 
 build-arg =
 ifneq ($(ftp_proxy),)
@@ -47,6 +47,12 @@ base-9-stamp: base-9/Dockerfile base-common/duneci-ctest base-common/duneci-inst
 	cp base-common/duneci-ctest base-9/
 	cp base-common/duneci-install-module base-9/
 	$(docker-build) --no-cache -t duneci/base:9 base-9
+	touch $@
+
+base-16.04-stamp: base-16.04/Dockerfile base-common/duneci-ctest base-common/duneci-install-module
+	cp base-common/duneci-ctest base-16.04/
+	cp base-common/duneci-install-module base-16.04/
+	$(docker-build) --no-cache -t duneci/base:16.04 base-16.04
 	touch $@
 
 dune-2.3-stamp: base-8-stamp dune-2.3/Dockerfile
