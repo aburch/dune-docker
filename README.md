@@ -6,15 +6,17 @@ Images
 
 The current images are:
 
-| image                    | parent          | description                                               |
-|--------------------------|-----------------|-----------------------------------------------------------|
-| duneci/base:8            | debian:8        | Debian 8 with gcc 4.9.2, clang 3.5, cmake 3.0.2           |
-| duneci/base:9            | debian:9        | Debian 9 with gcc 6.1.1, clang 3.8, cmake 3.5.2           |
-| duneci/dune:2.3          | duneci/base:8   | DUNE 2.3 core modules from Debian                         |
-| duneci/dune:2.4          | duneci/base:9   | DUNE 2.4 core modules from Debian                         |
-| duneci/dune:git          | duneci/base:9   | DUNE 3.0-dev snapshot                                     |
-| duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches)    |
-| duneci/dune-fufem:git    | duneci/dune:git | dune-{fufem,functions,solvers,typetree} (master branches) |
+| image                    | parent          | description                                                |
+|--------------------------|-----------------|------------------------------------------------------------|
+| duneci/base:8            | debian:8        | Debian 8 with gcc 4.9.2, clang 3.5, cmake 3.0.2            |
+| duneci/base:8            | base:8          | Debian 8 with gcc 4.9.2, clang 3.8 (backport), cmake 3.0.2 |
+| duneci/base:9            | debian:9        | Debian 9 with gcc 6.1.1, clang 3.8, cmake 3.6.2            |
+| duneci/base:16.04        | ubuntu:16.04    | Ubuntu LTS 16.04 with gcc 5.4.0, clang 3.8.0, cmake 3.5.1  |
+| duneci/dune:2.3          | duneci/base:8   | DUNE 2.3 core modules from Debian                          |
+| duneci/dune:2.4          | duneci/base:9   | DUNE 2.4 core modules from Debian                          |
+| duneci/dune:git          | duneci/base:9   | DUNE 3.0-dev snapshot                                      |
+| duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches)     |
+| duneci/dune-fufem:git    | duneci/dune:git | dune-{fufem,functions,solvers,typetree} (master branches)  |
 
 `.gitlab-ci.yml`
 ----------------
