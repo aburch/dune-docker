@@ -2,15 +2,42 @@
 # Author: Ansgar Burchardt <Ansgar.Burchardt@tu-dresden.de>
 
 set -e
+set -u
 
 usage() {
-    echo "usage: duneci-install-module <Git-repository> <dunecontrol-opts>" >&2
+    echo "usage: duneci-install-module [options] <Git-repository> <dunecontrol-opts>" >&2
+    echo >&2
+    echo "options:" >&2
+    echo "  -b <branch>, --branch <branch>: Install branch <branch> of the module." >&2
+    echo >&2
+    echo "environment variables:" >&2
+    echo "  DUNECI_BRANCH:" >&2
+    echo "      branch to use if none is specified via -b|--branch;" >&2
+    echo "      empty for default branch (usually 'master'); default: ''" >&2
+    echo "  DUNECI_BRANCH_AUTO:" >&2
+    echo "      if '1', try to use the same branch as build by the CI system," >&2
+    echo "      that is \${CI_BUILD_REF_NAME};  default: '0'" >&2
     exit ${1:-0}
 }
 
 if [[ $# -eq 0 ]]; then
     usage 0
 fi
+
+
+branch="${DUNECI_BRANCH:-}"
+
+while :; do
+    case "${1}" in
+        -b|--branch)
+            branch="${2}"
+            shift 2
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
 
 repo="${1}"
 module="${repo##*/}"; module="${module%.git}"
@@ -26,5 +53,16 @@ if [[ -d "${module}" ]]; then
     exit 1
 fi
 
-git clone "${repo}"
+git_clone_opts=(--depth=1 --no-single-branch)
+if [[ -n "${branch}" ]]; then
+    git_clone_opts+=(-b "${branch}")
+fi
+
+git clone "${git_clone_opts[@]}" "${repo}"
+if [[ "${DUNECI_BRANCH_AUTO:-0}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
+    # It is not an error if ${CI_BUILD_REF_NAME} is not a branch
+    # in the module we are about to install.
+    git -C "${module}" checkout -b "${CI_BUILD_REF_NAME}" || :
+fi
+
 dunecontrol --opts=/duneci/opts.gcc "${@}" --only="${module}" all
