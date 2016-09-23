@@ -1,0 +1,58 @@
+---
+image: duneci/docker-builder
+
+stages:
+ - cleanup
+ - stage1
+ - stage2
+ - stage3
+
+cleanup:
+ stage: cleanup
+ script:
+ - ./bin/duneci-docker-gc
+
+base:8:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:8 base-common base-8
+
+base:9:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:9 base-common base-9
+
+base:16.04:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:16.04 base-common base-16.04
+
+base:8-backports:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:8-backports base-8-backports
+
+dune:2.3:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image duneci/dune:2.3 dune-2.3
+
+dune:2.4:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image duneci/dune:2.4 dune-2.4
+
+dune:git:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image --no-cache duneci/dune:git dune-git
+
+dune-fufem:2.4:
+ stage: stage3
+ script:
+ - ./bin/duneci-build-docker-image duneci/dune-fufem dune-fufem
+
+dune-fufem:git:
+ stage: stage3
+ script:
+ - ./bin/duneci-build-docker-image --no-cache duneci/dune-fufem-git dune-fufem-git
