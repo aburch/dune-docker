@@ -37,12 +37,6 @@ done
 
 image="${1}"; shift
 
-(
-  set +u
-  echo "docker_opts: ${docker_opts[@]}"
-)
-exit 0
-
 builddir="build/${image##*/}"
 if [[ -e ${builddir} ]]; then
   echo "E: ${builddir} already exists" >&2
