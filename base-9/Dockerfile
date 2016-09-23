@@ -45,3 +45,4 @@ ENV PATH=/duneci/bin:$PATH
 COPY opts.clang opts.gcc /duneci/
 COPY duneci-ctest /duneci/bin/
 COPY duneci-install-module /duneci/bin/
+COPY duneci-standard-test /duneci/bin/
