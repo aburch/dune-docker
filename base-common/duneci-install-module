@@ -65,6 +65,8 @@ if [[ "${DUNECI_BRANCH_AUTO:-0}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
     git -C "${module}" checkout -b "${CI_BUILD_REF_NAME}" || :
 fi
 
+opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
+
 (
     cd "${module}"
     git_branch=$(git symbolic-ref HEAD)
@@ -73,7 +75,8 @@ fi
     echo "Installing ${module}; branch ${git_branch}"
     echo "  commit: $(git rev-parse HEAD)"
     echo "  date:   $(git log -1 --format='tformat:%ci') (commit)"
+    echo "  using opts file ${opts}"
     echo
 )
 
-dunecontrol --opts=/duneci/opts.gcc "${@}" --only="${module}" all
+dunecontrol --opts="${opts}" "${@}" --only="${module}" all
