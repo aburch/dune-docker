@@ -1,0 +1,60 @@
+#! /bin/bash
+
+set -e
+set -u
+
+usage() {
+  echo "usage: $0 [docker-options]... <image-name> <directories>..." >&2
+  exit 0
+}
+
+docker-build() {
+  docker build ${docker_opts[@]:+"${docker_opts[@]}"} "${@}"
+}
+
+docker_opts=()
+for var in ftp_proxy FTP_PROXY http_proxy HTTP_PROXY https_proxy HTTPS_PROXY no_proxy NO_PROXY; do
+  if [[ -n "${!var:-}" ]]; then
+    docker_opts+=(--build-arg="${var}=${!var}")
+  fi
+done
+
+if [[ $# -lt 2 ]]; then
+  usage
+fi
+
+while :; do
+  case "${1}" in
+    -*)
+      docker_opts+=("${1}")
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+image="${1}"; shift
+
+(
+  set +u
+  echo "docker_opts: ${docker_opts[@]}"
+)
+exit 0
+
+builddir="build/${image##*/}"
+if [[ -e ${builddir} ]]; then
+  echo "E: ${builddir} already exists" >&2
+  exit 1
+fi
+
+mkdir -p -- "${builddir}"
+
+for d in "$@"; do
+  cp -t "${builddir}" -- "${d}"/*
+done
+
+docker-build -t "${image}" "${builddir}"
+
+rm -rf -- "${builddir}"
