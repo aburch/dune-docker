@@ -2,15 +2,9 @@
 image: duneci/docker-builder
 
 stages:
- - cleanup
  - stage1
  - stage2
  - stage3
-
-cleanup:
- stage: cleanup
- script:
- - ./bin/duneci-docker-gc
 
 base:8:
  stage: stage1
