@@ -2,9 +2,17 @@
 image: duneci/docker-builder
 
 stages:
+ - stage0
  - stage1
  - stage2
  - stage3
+
+pull base distributions:
+ stage: stage0
+ script:
+ - docker pull debian:8
+ - docker pull debian:stretch
+ - docker pull ubuntu:16.04
 
 base:8:
  stage: stage1
