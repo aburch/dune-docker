@@ -53,6 +53,8 @@ dune:2.4--clang:
   script: duneci-standard-test --opts=/duneci/opts.clang
 ```
 
+For more information, take a look at the [GitLab documentation on `.gitlab-ci.yml`](https://docs.gitlab.com/ce/ci/yaml/README.html).
+
 Updating gitlab-runner
 ----------------------
 
