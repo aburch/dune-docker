@@ -33,17 +33,11 @@ To build with several images:
 ---
 dune:2.4--gcc:
   image: duneci/dune:2.4
-  script:
-  - dunecontrol --current all
-  - dunecontrol --current make build_tests
-  - cd build-cmake; duneci-ctest
+  script: duneci-standard-test
 
 dune:2.4--clang:
   image: duneci/dune:2.4
-  script:
-  - dunecontrol --current --opts=/duneci/opts.clang all
-  - dunecontrol --current make build_tests
-  - cd build-cmake; duneci-ctest
+  script: duneci-standard-test --opts=/duneci/opts.clang
 ```
 
 You can also specify a default image and use it in several jobs:
@@ -53,16 +47,10 @@ You can also specify a default image and use it in several jobs:
 image: duneci/dune:2.4
 
 dune:2.4--gcc:
-  script:
-  - dunecontrol --current all
-  - dunecontrol --current make build_tests
-  - cd build-cmake; duneci-ctest
+  script: duneci-standard-test
 
 dune:2.4--clang:
-  script:
-  - dunecontrol --current --opts=/duneci/opts.clang all
-  - dunecontrol --current make build_tests
-  - cd build-cmake; duneci-ctest
+  script: duneci-standard-test --opts=/duneci/opts.clang
 ```
 
 Updating gitlab-runner
