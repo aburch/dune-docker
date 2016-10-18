@@ -1,5 +1,14 @@
 #! /usr/bin/env python3
+#
 # Wrapper around CTest for DUNE
+#
+# CTest returns with an error status not only when tests failed, but also
+# when tests were only skipped.  This wrapper checks the log and returns
+# successfully if no tests failed; skipped tests do not result in an error.
+# This behaviour is needed in a continuous integration environment, when
+# building binary packages or in other cases where the testsuite should be
+# run automatically.
+#
 # Author: Ansgar Burchardt <Ansgar.Burchardt@tu-dresden.de>
 
 import errno

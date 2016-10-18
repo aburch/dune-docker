@@ -16,4 +16,4 @@ set -x
 ${DUNECONTROL} --current "${@}" all
 ${DUNECONTROL} --current make build_tests
 cd build-cmake
-duneci-ctest
+dune-ctest
