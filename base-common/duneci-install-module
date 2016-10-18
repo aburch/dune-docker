@@ -43,15 +43,6 @@ repo="${1}"
 module="${repo##*/}"; module="${module%.git}"
 shift
 
-if [[ "${module}" = dune-common ]]; then
-    for f in dunecontrol dune-ctest; do
-        src=/duneci/modules/dune-common/bin/${f}
-        if [[ -x ${src} ]]; then
-            ln -sf ${src} /duneci/bin/
-        fi
-    done
-fi
-
 cd /duneci/modules
 if [[ -d "${module}" ]]; then
     echo "Module ${module} is already installed." >&2
@@ -68,6 +59,15 @@ if [[ "${DUNECI_BRANCH_AUTO:-0}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
     # It is not an error if ${CI_BUILD_REF_NAME} is not a branch
     # in the module we are about to install.
     git -C "${module}" checkout "${CI_BUILD_REF_NAME}" || :
+fi
+
+if [[ "${module}" = dune-common ]]; then
+    for f in dunecontrol dune-ctest; do
+        src=/duneci/modules/dune-common/bin/${f}
+        if [[ -x ${src} ]]; then
+            ln -sf ${src} /duneci/bin/
+        fi
+    done
 fi
 
 opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
