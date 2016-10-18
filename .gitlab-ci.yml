@@ -17,8 +17,8 @@ pull base distributions:
  - master@ansgar/dune-docker
 
 docker-builder:
-  stage: stage1
-  script:
+ stage: stage1
+ script:
  - ./bin/duneci-build-docker-image duneci/docker-builder docker-builder
  only:
  - master@ansgar/dune-docker
