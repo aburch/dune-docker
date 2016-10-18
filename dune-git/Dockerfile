@@ -16,11 +16,3 @@ RUN duneci-install-module https://gitlab.dune-project.org/core/dune-common.git \
   && duneci-install-module https://gitlab.dune-project.org/core/dune-grid.git \
   && duneci-install-module https://gitlab.dune-project.org/core/dune-istl.git \
   && duneci-install-module https://gitlab.dune-project.org/core/dune-localfunctions.git
-
-USER root
-WORKDIR /
-RUN ln -s /duneci/modules/dune-common/bin/dunecontrol /usr/local/bin/
-
-USER duneci
-WORKDIR /duneci
-RUN ln -sf /duneci/modules/dune-common/bin/dune-ctest /duneci/bin/
