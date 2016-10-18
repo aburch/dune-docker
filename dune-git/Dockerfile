@@ -23,3 +23,4 @@ RUN ln -s /duneci/modules/dune-common/bin/dunecontrol /usr/local/bin/
 
 USER duneci
 WORKDIR /duneci
+RUN ln -sf /duneci/modules/dune-common/bin/dune-ctest /duneci/bin/

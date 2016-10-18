@@ -12,8 +12,13 @@ if [[ -x bin/dunecontrol ]]; then
   DUNECONTROL=bin/dunecontrol
 fi
 
+DUNE_CTEST=duneci-ctest
+if [[ -x bin/dune-ctest ]]; then
+  DUNE_CTEST=../bin/dune-ctest
+fi
+
 set -x
 ${DUNECONTROL} --current "${@}" all
 ${DUNECONTROL} --current make build_tests
 cd build-cmake
-dune-ctest
+${DUNE_CTEST}

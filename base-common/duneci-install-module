@@ -44,7 +44,12 @@ module="${repo##*/}"; module="${module%.git}"
 shift
 
 if [[ "${module}" = dune-common ]]; then
-    ln -sf /duneci/modules/dune-common/bin/dunecontrol /duneci/bin
+    for f in dunecontrol dune-ctest; do
+        src=/duneci/modules/dune-common/bin/${f}
+        if [[ -x ${src} ]]; then
+            ln -sf ${src} /duneci/bin/
+        fi
+    done
 fi
 
 cd /duneci/modules
