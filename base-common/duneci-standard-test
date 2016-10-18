@@ -7,8 +7,13 @@ if [[ -n "${DUNECI_OPTS:-}" ]]; then
   set -- --opts="${DUNECI_OPTS}" "${@}"
 fi
 
+DUNECONTROL=dunecontrol
+if [[ -x bin/dunecontrol ]]; then
+  DUNECONTROL=bin/dunecontrol
+fi
+
 set -x
-dunecontrol --current "${@}" all
-dunecontrol --current make build_tests
+${DUNECONTROL} --current "${@}" all
+${DUNECONTROL} --current make build_tests
 cd build-cmake
 duneci-ctest
