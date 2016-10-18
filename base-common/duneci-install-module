@@ -62,7 +62,7 @@ git clone "${git_clone_opts[@]}" "${repo}"
 if [[ "${DUNECI_BRANCH_AUTO:-0}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
     # It is not an error if ${CI_BUILD_REF_NAME} is not a branch
     # in the module we are about to install.
-    git -C "${module}" checkout -b "${CI_BUILD_REF_NAME}" || :
+    git -C "${module}" checkout "${CI_BUILD_REF_NAME}" || :
 fi
 
 opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
