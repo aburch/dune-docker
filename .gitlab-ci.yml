@@ -13,6 +13,7 @@ pull base distributions:
  - docker pull debian:8
  - docker pull debian:stretch
  - docker pull ubuntu:16.04
+ - docker pull ubuntu:16.10
  only:
  - master@ansgar/dune-docker
 
@@ -41,6 +42,13 @@ base:16.04:
  stage: stage1
  script:
  - ./bin/duneci-build-docker-image duneci/base:16.04 base-common base-16.04
+ only:
+ - master@ansgar/dune-docker
+
+base:16.10:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:16.10 base-common base-16.10
  only:
  - master@ansgar/dune-docker
 
