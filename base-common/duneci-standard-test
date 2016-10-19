@@ -3,7 +3,7 @@
 set -e
 set -u
 
-if [[ -n "${DUNECI_OPTS:-}" ]]; then
+if [[ -n "${DUNECI_OPTS:-/duneci/opts.gcc}" ]]; then
   set -- --opts="${DUNECI_OPTS}" "${@}"
 fi
 
