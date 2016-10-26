@@ -18,6 +18,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   git \
   gnuplot-nox \
   libadolc-dev \
+  libalberta-dev \
   libboost-dev \
   libboost-program-options-dev \
   libboost-serialization-dev \
