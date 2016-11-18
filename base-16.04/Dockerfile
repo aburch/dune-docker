@@ -25,6 +25,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   libboost-system-dev \
   libgtest-dev \
   libltdl-dev \
+  libscotchmetis-dev \
   libsuitesparse-dev \
   libsuperlu-dev \
   libtinyxml2-dev \
