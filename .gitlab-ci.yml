@@ -73,6 +73,13 @@ dune:2.4:
  only:
  - master@ansgar/dune-docker
 
+dune:2.5:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image --no-cache duneci/dune:2.5 dune-2.5
+ only:
+ - master@ansgar/dune-docker
+
 dune:git:
  stage: stage2
  script:

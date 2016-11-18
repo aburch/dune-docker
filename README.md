@@ -15,6 +15,7 @@ The current images are:
 | duneci/base:16.10        | ubuntu:16.10    | Ubuntu 16.10 with gcc 6.2.0, clang 3.8.1, cmake 3.5.2      |
 | duneci/dune:2.3          | duneci/base:8   | DUNE 2.3 core modules from Debian                          |
 | duneci/dune:2.4          | duneci/base:9   | DUNE 2.4 core modules from Debian                          |
+| duneci/dune:2.5          | duneci/base:9   | DUNE 2.5 core and staging modules (from Git)               |
 | duneci/dune:git          | duneci/base:9   | DUNE 3.0-dev snapshot                                      |
 | duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches)     |
 | duneci/dune-fufem:git    | duneci/dune:git | dune-{fufem,functions,solvers,typetree} (master branches)  |
