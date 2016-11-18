@@ -35,6 +35,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   openssh-client \
   pkg-config \
   python-dev \
+  python-vtk6 \
   python3 \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci --uid 50000 duneci
