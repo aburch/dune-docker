@@ -33,6 +33,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   locales-all \
   mpi-default-bin \
   mpi-default-dev \
+  ninja-build \
   openssh-client \
   pkg-config \
   python-dev \
