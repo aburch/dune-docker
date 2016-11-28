@@ -16,9 +16,9 @@ The current images are:
 | duneci/dune:2.3          | duneci/base:8   | DUNE 2.3 core modules from Debian                          |
 | duneci/dune:2.4          | duneci/base:9   | DUNE 2.4 core modules from Debian                          |
 | duneci/dune:2.5          | duneci/base:9   | DUNE 2.5 core and staging modules (from Git)               |
-| duneci/dune:git          | duneci/base:9   | DUNE 3.0-dev snapshot                                      |
-| duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branches)     |
-| duneci/dune-fufem:git    | duneci/dune:git | dune-{fufem,functions,solvers,typetree} (master branches)  |
+| duneci/dune:git          | duneci/base:9   | DUNE master core and staging modules (from Git)            |
+| duneci/dune-fufem:2.4    | duneci/dune:2.4 | dune-{fufem,functions,solvers,typetree} (2.4 branch)       |
+| duneci/dune-fufem:git    | duneci/dune:git | dune-{elasticity,fufem,grid-glue,solvers} (master branch)  |
 
 `.gitlab-ci.yml`
 ----------------
