@@ -2,11 +2,10 @@ FROM duneci/dune:git
 
 USER duneci
 WORKDIR /duneci/modules
-RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git
-RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-fufem.git
-RUN git clone https://gitlab.dune-project.org/extensions/dune-grid-glue.git
-RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-matrix-vector.git
-RUN git clone https://git.imp.fu-berlin.de/agnumpde/dune-solvers.git
-RUN dunecontrol all
+RUN duneci-install-module https://git.imp.fu-berlin.de/agnumpde/dune-matrix-vector.git \
+  && duneci-install-module https://git.imp.fu-berlin.de/agnumpde/dune-fufem.git \
+  && duneci-install-module https://git.imp.fu-berlin.de/agnumpde/dune-solvers.git \
+  && duneci-install-module https://git.imp.fu-berlin.de/agnumpde/dune-elasticity.git \
+  && duneci-install-module https://gitlab.dune-project.org/extensions/dune-grid-glue.git
 
 WORKDIR /duneci
