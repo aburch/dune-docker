@@ -1,4 +1,4 @@
-FROM duneci/base:9
+FROM duneci/base:16.04
 
 USER root
 WORKDIR /
