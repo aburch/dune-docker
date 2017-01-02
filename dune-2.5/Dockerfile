@@ -1,11 +1,18 @@
 FROM duneci/base:9
 
+USER root
+WORKDIR /
+
+RUN apt-get update && apt-get install --no-install-recommends --yes \
+  libdune-common-dev \
+  libdune-functions-dev \
+  libdune-geometry-dev \
+  libdune-grid-dev \
+  libdune-localfunctions-dev \
+  libdune-istl-dev \
+  libdune-typetree-dev \
+  libdune-uggrid-dev \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 USER duneci
-RUN duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/core/dune-common.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/core/dune-geometry.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/staging/dune-uggrid.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/core/dune-grid.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/core/dune-istl.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/core/dune-localfunctions.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/staging/dune-typetree.git \
-  && duneci-install-module -b releases/2.5 https://gitlab.dune-project.org/staging/dune-functions.git
+WORKDIR /duneci
