@@ -10,13 +10,13 @@ The current images are:
 |--------------------------|-------------------|------------------------------------------------------------|
 | duneci/base:8            | debian:8          | Debian 8 with gcc 4.9.2, clang 3.5, cmake 3.0.2            |
 | duneci/base:8-backports  | duneci/base:8     | Debian 8 with gcc 4.9.2, clang 3.8 (backport), cmake 3.0.2 |
-| duneci/base:9            | debian:9          | Debian 9 with gcc 6.2, clang 3.8, cmake 3.6.2              |
+| duneci/base:9            | debian:9          | Debian 9 with gcc 6.2, clang 3.8, cmake 3.7                |
 | duneci/base:16.04        | ubuntu:16.04      | Ubuntu LTS 16.04 with gcc 5.4.0, clang 3.8.0, cmake 3.5.1  |
 | duneci/base:16.10        | ubuntu:16.10      | Ubuntu 16.10 with gcc 6.2.0, clang 3.8.1, cmake 3.5.2      |
-| duneci/dune:2.3          | duneci/base:8     | DUNE 2.3 core modules from Debian                          |
-| duneci/dune:2.4          | duneci/base:16.04 | DUNE 2.4 core modules from Debian                          |
-| duneci/dune:git          | duneci/base:9     | DUNE master core and staging modules (from Git)            |
+| duneci/dune:2.3          | duneci/base:8     | DUNE 2.3 core modules (Debian packages)                    |
+| duneci/dune:2.4          | duneci/base:16.04 | DUNE 2.4 core modules (Debian packages)                    |
 | duneci/dune:2.5          | duneci/base:9     | DUNE 2.5 core and staging modules (Debian packages)        |
+| duneci/dune:git          | duneci/base:9     | DUNE master core and staging modules (Git)                 |
 | duneci/dune-fufem:2.4    | duneci/dune:2.4   | dune-{fufem,functions,solvers,typetree} (2.4 branch)       |
 | duneci/dune-fufem:git    | duneci/dune:git   | dune-{elasticity,fufem,grid-glue,solvers} (master branch)  |
 
