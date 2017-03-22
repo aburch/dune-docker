@@ -88,3 +88,48 @@ The current version can be shown by running
 ```
 docker exec gitlab-runner gitlab-runner -v
 ```
+
+Installing gitlab-runner
+------------------------
+
+To initially install gitlab-runner:
+
+```shell
+apt install docker.io
+mkdir -p /srv/gitlab-runner/config
+```
+then follow the steps from [Updating gitlab-runner](#updating-gitlab-runner).
+
+Register the runner with GitLab CI:
+```shell
+docker exec -it gitlab-runner gitlab-runner register
+```
+
+Finally edit `/srv/gitlab-runner/config/config.toml`:
+```TOML
+concurrent = 4
+check_interval = 0
+
+[[runners]]
+  name = "<name>"
+  url = "https://gitlab.dune-project.org/ci"
+  token = "<private token from registration>"
+  executor = "docker"
+
+  # Set proxy variables if needed:
+  #environment = ["ftp_proxy=http://<proxy>:3128", "FTP_PROXY=http://<proxy>:3128", "http_proxy=http://<proxy>:3128", "HTTP_PROXY=http://<proxy>:3128", "https_proxy=http://<proxy>:3128", "HTTPS_PROXY=http://<proxy>:3128", "no_proxy=127.0.0.1, localhost", "NO_PROXY=127.0.0.1, localhost"]
+  [runners.docker]
+    # tls_verify = false
+    image = "duneci/dune:latest"
+    privileged = false
+    security_opt = ["no-new-privileges"]
+    disable_cache = false
+    volumes = ["/cache"]
+    allowed_images = ["duneci/*"]
+    pull_policy = "if-not-present"
+
+    # OpenMPI-2 is unhappy with the (too long) default hostnames:
+    hostname = "ci"
+```
+See the [documentation of GitLab runner's configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html) for details.
+Please also keep the [security considerations](https://docs.gitlab.com/runner/security/index.html) in mind.
