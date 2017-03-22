@@ -24,14 +24,14 @@ The current images are:
 ----------------
 
 Installing dependencies:
-```
+```yaml
 before_script:
   - duneci-install-module https://gitlab.dune-project.org/core/dune-common.git
   - duneci-install-module https://gitlab.dune-project.org/core/dune-geometry.git
 ```
 
 To build with several images:
-```
+```yaml
 ---
 dune:2.4--gcc:
   image: duneci/dune:2.4
@@ -44,7 +44,7 @@ dune:2.4--clang:
 
 You can also specify a default image and use it in several jobs:
 
-```
+```yaml
 ---
 image: duneci/dune:2.4
 
@@ -62,7 +62,7 @@ Updating gitlab-runner
 
 To update `gitlab-runner` on the VM:
 
-```
+```shell
 docker pull gitlab/gitlab-runner:latest
 docker stop gitlab-runner
 docker rm -v gitlab-runner
@@ -72,7 +72,7 @@ docker run -d --name gitlab-runner --restart always \
   gitlab/gitlab-runner:latest
 ```
 or, if a HTTP proxy is required,
-```
+```shell
 docker run -d --name gitlab-runner --restart always \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /srv/gitlab-runner/config:/etc/gitlab-runner \
@@ -85,7 +85,7 @@ docker run -d --name gitlab-runner --restart always \
 
 The current version can be shown by running
 
-```
+```shell
 docker exec gitlab-runner gitlab-runner -v
 ```
 
