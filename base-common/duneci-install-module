@@ -16,7 +16,7 @@ usage() {
     echo "      empty for default branch (usually 'master'); default: ''" >&2
     echo "  DUNECI_BRANCH_AUTO:" >&2
     echo "      if '1', try to use the same branch as build by the CI system," >&2
-    echo "      that is \${CI_BUILD_REF_NAME};  default: '0'" >&2
+    echo "      that is \${CI_BUILD_REF_NAME};  default: '1'" >&2
     exit ${1:-0}
 }
 
@@ -55,7 +55,7 @@ if [[ -n "${branch}" ]]; then
 fi
 
 git clone "${git_clone_opts[@]}" "${repo}"
-if [[ "${DUNECI_BRANCH_AUTO:-0}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
+if [[ "${DUNECI_BRANCH_AUTO:-1}" = "1" && -n "${CI_BUILD_REF_NAME:-}" ]]; then
     # It is not an error if ${CI_BUILD_REF_NAME} is not a branch
     # in the module we are about to install.
     git -C "${module}" checkout "${CI_BUILD_REF_NAME}" || :
