@@ -6,6 +6,7 @@ stages:
  - stage1
  - stage2
  - stage3
+ - publish
 
 pull base distributions:
  stage: stage0
@@ -100,3 +101,19 @@ dune-fufem:git:
  - ./bin/duneci-build-docker-image --no-cache duneci/dune-fufem-git dune-fufem-git
  only:
  - master@ansgar/dune-docker
+
+publish:
+ stage: publish
+ when: manual
+ script:
+ - docker push duneci/base:8
+ - docker push duneci/base:9
+ - docker push duneci/base:16.04
+ - docker push duneci/base:16.10
+ - docker push duneci/base:8-backports
+ - docker push duneci/dune:2.3
+ - docker push duneci/dune:2.4
+ - docker push duneci/dune:2.5
+ - docker push duneci/dune:git
+ - docker push duneci/dune-fufem:2.4
+ - docker push duneci/dune-fufem:git
