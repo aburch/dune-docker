@@ -67,6 +67,7 @@ docker pull gitlab/gitlab-runner:latest
 docker stop gitlab-runner
 docker rm -v gitlab-runner
 docker run -d --name gitlab-runner --restart always \
+  --stop-signal SIGQUIT \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /srv/gitlab-runner/config:/etc/gitlab-runner \
   gitlab/gitlab-runner:latest
@@ -74,6 +75,7 @@ docker run -d --name gitlab-runner --restart always \
 or, if a HTTP proxy is required,
 ```shell
 docker run -d --name gitlab-runner --restart always \
+  --stop-signal SIGQUIT \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /srv/gitlab-runner/config:/etc/gitlab-runner \
   -e ftp_proxy=${ftp_proxy} -e FTP_PROXY=${FTP_PROXY} \
