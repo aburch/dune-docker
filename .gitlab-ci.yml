@@ -104,7 +104,6 @@ dune-fufem:git:
 
 publish:
  stage: publish
- when: manual
  script:
  - docker push duneci/base:8
  - docker push duneci/base:9
@@ -117,3 +116,5 @@ publish:
  - docker push duneci/dune:git
  - docker push duneci/dune-fufem:2.4
  - docker push duneci/dune-fufem:git
+ only:
+ - master@ansgar/dune-docker
