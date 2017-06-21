@@ -1,0 +1,12 @@
+#! /bin/bash
+set -e
+set -u
+
+file=config.toml
+
+if [[ ! -f ${file} ]]; then
+  echo "${file} not present" >&2
+  exit 1
+fi
+
+exec gpg -a --encrypt -r 80E976F14A508A48E9CA3FE9BC372252CA1CF964 -r 8BA8CE830E11C56A4B45CCE0742E0451555CC11F < ${file} > ${file}.asc
