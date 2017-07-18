@@ -74,7 +74,7 @@ opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
 
 (
     cd "${module}"
-    git_branch=$(git symbolic-ref HEAD)
+    git_branch=$(git symbolic-ref HEAD 2>/dev/null || echo "(unknown)")
     git_branch="${git_branch#refs/heads/}"
     echo
     echo "Installing ${module}; branch ${git_branch}"
