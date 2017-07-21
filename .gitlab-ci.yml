@@ -39,6 +39,13 @@ base:9:
  only:
  - master@ansgar/dune-docker
 
+base:10:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/base:10 base-common base-10
+ only:
+ - master@ansgar/dune-docker
+
 base:16.04:
  stage: stage1
  script:
