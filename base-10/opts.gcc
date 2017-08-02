@@ -1,1 +1,1 @@
-CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/g++-7 -DCMAKE_C_COMPILER=/usr/bin/gcc-7 -DCXX_MAX_STANDARD=17 -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fdiagnostics-color=always'"
+CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fdiagnostics-color=always'"
