@@ -98,14 +98,14 @@ dune:git:
 dune-fufem:2.4:
  stage: stage3
  script:
- - ./bin/duneci-build-docker-image duneci/dune-fufem dune-fufem
+ - ./bin/duneci-build-docker-image duneci/dune-fufem:2.4 dune-fufem
  only:
  - master@ansgar/dune-docker
 
 dune-fufem:git:
  stage: stage3
  script:
- - ./bin/duneci-build-docker-image --no-cache duneci/dune-fufem-git dune-fufem-git
+ - ./bin/duneci-build-docker-image --no-cache duneci/dune-fufem:git dune-fufem-git
  only:
  - master@ansgar/dune-docker
 
