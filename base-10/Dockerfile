@@ -50,7 +50,7 @@ WORKDIR /duneci
 RUN mkdir -p /duneci/bin /duneci/modules
 ENV DUNE_CONTROL_PATH=.:/duneci/modules
 ENV PATH=/duneci/bin:$PATH
-COPY opts.clang opts.gcc /duneci/
+COPY opts.clang opts.gcc opts.gcc.c++17 /duneci/
 COPY dune-ctest /duneci/bin/
 RUN ln -s dune-ctest /duneci/bin/duneci-ctest
 COPY duneci-install-module /duneci/bin/
