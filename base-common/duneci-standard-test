@@ -16,8 +16,13 @@ if [[ -x bin/dune-ctest ]]; then
   DUNE_CTEST=../bin/dune-ctest
 fi
 
+parallel_opts=
+if [[ -v DUNECI_PARALLEL ]]; then
+  parallel_opts="-j${DUNECI_PARALLEL}"
+fi
+
 set -x
-${DUNECONTROL} --current "${@}" all
-${DUNECONTROL} --current make build_tests
-cd build-cmake
-${DUNE_CTEST}
+${DUNECONTROL} --current "${@}" vcsetup
+${DUNECONTROL} --current "${@}" configure
+${DUNECONTROL} --current "${@}" make ${parallel_opts} all build_tests
+${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts}

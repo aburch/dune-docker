@@ -72,6 +72,10 @@ fi
 
 opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
 
+if [[ -v DUNECI_PARALLEL ]]; then
+    set -- --make-opts="-j${DUNECI_PARALLEL}" "${@}"
+fi
+
 (
     cd "${module}"
     git_branch=$(git symbolic-ref HEAD 2>/dev/null || echo "(unknown)")
