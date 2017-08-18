@@ -21,6 +21,17 @@ if [[ -v DUNECI_PARALLEL ]]; then
   parallel_opts="-j${DUNECI_PARALLEL}"
 fi
 
+# Allow oversubscription (tests might want to try having more ranks
+# than environment has processors) and force degraded mode (as we
+# might run multiple tests in parallel and this is not good with
+# OpenMPI's agressive mode)
+# References:
+#  - https://bugs.debian.org/850229
+#  - https://gitlab.dune-project.org/core/dune-grid/issues/67
+#  - https://www.open-mpi.org/faq/?category=running#oversubscribing
+export OMPI_MCA_rmaps_base_oversubscribe=1
+export OMPI_MCA_mpi_yield_when_idle=1
+
 set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
