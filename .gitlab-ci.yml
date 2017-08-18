@@ -114,6 +114,7 @@ publish:
  script:
  - docker push duneci/base:8
  - docker push duneci/base:9
+ - docker push duneci/base:10
  - docker push duneci/base:16.04
  - docker push duneci/base:16.10
  - docker push duneci/base:8-backports
