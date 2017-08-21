@@ -124,7 +124,7 @@ check_interval = 0
   executor = "docker"
 
   # Set proxy variables if needed:
-  #environment = ["ftp_proxy=http://<proxy>:3128", "FTP_PROXY=http://<proxy>:3128", "http_proxy=http://<proxy>:3128", "HTTP_PROXY=http://<proxy>:3128", "https_proxy=http://<proxy>:3128", "HTTPS_PROXY=http://<proxy>:3128", "no_proxy=127.0.0.1, localhost", "NO_PROXY=127.0.0.1, localhost"]
+  environment = ["ftp_proxy=http://dune-proxy:3128", "http_proxy=http://dune-proxy:3128", "https_proxy=http://dune-proxy:3128", "no_proxy=127.0.0.1, localhost"]
   [runners.docker]
     # tls_verify = false
     image = "duneci/dune:latest"
@@ -134,9 +134,39 @@ check_interval = 0
     volumes = ["/cache"]
     allowed_images = ["duneci/*"]
     pull_policy = "if-not-present"
+    # See [Proxy setup](#proxy-setup) below:
+    network_mode = "gitlab-ci-dune"
 
     # OpenMPI-2 is unhappy with the (too long) default hostnames:
     hostname = "ci"
 ```
 See the [documentation of GitLab runner's configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html) for details.
 Please also keep the [security considerations](https://docs.gitlab.com/runner/security/index.html) in mind.
+
+Proxy setup
+-----------
+
+Setup network (once):
+```shell
+docker network create --internal --driver=bridge gitlab-ci-dune
+```
+
+Update and start proxy:
+```shell
+docker stop dune-proxy
+docker rm -v dune-proxy
+docker create --name dune-proxy \
+  --restart always --security-opt no-new-privileges \
+  -v /srv/dune-proxy:/srv/squid:ro \
+  duneci/proxy
+docker network connect gitlab-ci-dune dune-proxy
+docker start dune-proxy
+```
+
+In gitlab-runner's `config.toml`:
+
+```TOML
+[[runners]]
+  [runners.docker]
+    network_mode = "gitlab-ci-dune"
+```
