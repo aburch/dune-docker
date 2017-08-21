@@ -25,6 +25,13 @@ docker-builder:
  only:
  - master@ansgar/dune-docker
 
+proxy:
+ stage: stage1
+ script:
+ - ./bin/duneci-build-docker-image duneci/proxy proxy
+ only:
+ - master@ansgar/dune-docker
+
 base:8:
  stage: stage1
  script:
