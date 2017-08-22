@@ -124,6 +124,9 @@ check_interval = 0
 See the [documentation of GitLab runner's configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html) for details.
 Please also keep the [security considerations](https://docs.gitlab.com/runner/security/index.html) in mind.
 
+An encrypted version of the live configuration can be found in
+[config/gitlab-runner](config/gitlab-runner).
+
 Proxy setup
 -----------
 
@@ -147,4 +150,7 @@ configured to filter requests.  The actual builds are only in the
 `gitlab-ci-dune` network and can only access the internet via the
 filtering proxy.
 
-See the script [duneci-proxy](bin/duneci-proxy) for details.
+See the script [duneci-proxy](bin/duneci-proxy) for details of the
+setup, and [config/dune-proxy/squid.conf](config/dune-proxy/squid.conf)
+and [config/fu-proxy/squid.conf](config/fu-proxy/squid.conf) for the proxy
+configuration.
