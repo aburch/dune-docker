@@ -30,7 +30,7 @@ if [ ! -e ${configfile} ]; then
   exit 1
 fi
 
-if [ -z "$(docker network ls -f name=${network})" ]; then
+if [ -z "$(docker network ls -q -f name=${network})" ]; then
   docker network create --internal --driver=bridge ${network}
 fi
 
