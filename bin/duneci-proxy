@@ -10,7 +10,7 @@ usage() {
 	Setup an internal network <network> (if it does not already exist) and a
 	proxy running in container <name> using /srv/<name>/squid.conf.
 
-        If <name> already exists, it is stopped and recreated (for updates).
+	If <name> already exists, it is stopped and recreated (for updates).
 	EOT
 
   exit ${1:-0}
