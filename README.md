@@ -156,7 +156,7 @@ Update and start proxy:
 docker stop dune-proxy
 docker rm -v dune-proxy
 docker create --name dune-proxy \
-  --restart always --security-opt no-new-privileges \
+  --restart always --read-only --security-opt no-new-privileges \
   -v /srv/dune-proxy:/srv/squid:ro \
   duneci/proxy
 docker network connect gitlab-ci-dune dune-proxy
