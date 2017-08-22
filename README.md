@@ -170,3 +170,9 @@ In gitlab-runner's `config.toml`:
   [runners.docker]
     network_mode = "gitlab-ci-dune"
 ```
+
+This sets up a container `dune-proxy` which is part of two networks
+(the default bridge and `gitlab-ci-dune`) running a squid proxy
+configured to filter requests.  The actual builds are only in the
+`gitlab-ci-dune` network and can only access the internet via the
+filtering proxy.
