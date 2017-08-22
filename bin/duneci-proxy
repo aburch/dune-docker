@@ -1,0 +1,46 @@
+#! /bin/bash
+
+set -e
+set -u
+
+usage() {
+  cat >&2 <<-EOT
+	usage: duneci-proxy <network> <name>
+
+	Setup an internal network <network> (if it does not already exist) and a
+	proxy running in container <name> using /srv/<name>/squid.conf.
+
+        If <name> already exists, it is stopped and recreated (for updates).
+	EOT
+
+  exit ${1:-0}
+}
+
+if [ $# -ne 2 ]; then
+  usage
+fi
+
+network=${1}
+name=${2}
+configdir=/srv/${name}
+configfile=${configdir}/squid.conf
+
+if [ ! -e ${configfile} ]; then
+  echo "E: ${configfile} does not exist" >&2
+  exit 1
+fi
+
+if [ -z "$(docker network ls -f name=${network})" ]; then
+  docker network create --internal --driver=bridge ${network}
+fi
+
+# Ignore error on stop, it might not run (yet)
+docker stop ${name} || :
+docker rm -v ${name} || :
+
+docker create --name ${name} \
+  --restart always --read-only --security-opt no-new-privileges \
+  -v /srv/${name}:/srv/squid:ro \
+  duneci/proxy
+docket network connect ${network} ${name}
+docker start ${name}

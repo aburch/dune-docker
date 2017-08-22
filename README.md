@@ -64,26 +64,7 @@ Updating gitlab-runner
 To update `gitlab-runner` on the VM:
 
 ```shell
-docker pull gitlab/gitlab-runner:latest
-docker stop gitlab-runner
-docker rm -v gitlab-runner
-docker run -d --name gitlab-runner --restart always \
-  --stop-signal SIGQUIT \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /srv/gitlab-runner/config:/etc/gitlab-runner \
-  gitlab/gitlab-runner:latest
-```
-or, if a HTTP proxy is required,
-```shell
-docker run -d --name gitlab-runner --restart always \
-  --stop-signal SIGQUIT \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /srv/gitlab-runner/config:/etc/gitlab-runner \
-  -e ftp_proxy=${ftp_proxy} -e FTP_PROXY=${FTP_PROXY} \
-  -e http_proxy=${http_proxy} -e HTTP_PROXY=${HTTP_PROXY} \
-  -e https_proxy=${https_proxy} -e HTTPS_PROXY=${HTTPS_PROXY} \
-  -e no_proxy=${no_proxy} -e NO_PROXY=${NO_PROXY} \
-  gitlab/gitlab-runner:latest
+./bin/duneci-runner
 ```
 
 The current version can be shown by running
@@ -146,21 +127,10 @@ Please also keep the [security considerations](https://docs.gitlab.com/runner/se
 Proxy setup
 -----------
 
-Setup network (once):
+Initial setup and updates:
 ```shell
-docker network create --internal --driver=bridge gitlab-ci-dune
-```
-
-Update and start proxy:
-```shell
-docker stop dune-proxy
-docker rm -v dune-proxy
-docker create --name dune-proxy \
-  --restart always --read-only --security-opt no-new-privileges \
-  -v /srv/dune-proxy:/srv/squid:ro \
-  duneci/proxy
-docker network connect gitlab-ci-dune dune-proxy
-docker start dune-proxy
+./bin/duneci-proxy gitlab-ci-dune dune-proxy
+./bin/duneci-proxy gitlab-ci-fu fu-proxy
 ```
 
 In gitlab-runner's `config.toml`:
@@ -176,3 +146,5 @@ This sets up a container `dune-proxy` which is part of two networks
 configured to filter requests.  The actual builds are only in the
 `gitlab-ci-dune` network and can only access the internet via the
 filtering proxy.
+
+See the script [duneci-proxy](bin/duneci-proxy) for details.

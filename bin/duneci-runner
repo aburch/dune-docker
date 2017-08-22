@@ -1,0 +1,25 @@
+#! /bin/bash
+
+set -e
+set -u
+
+options=(
+  -d --name gitlab-runner --restart always
+  --stop-signal SIGQUIT
+  -v /var/run/docker.sock:/var/run/docker.sock
+  -v /srv/gitlab-runner/config:/etc/gitlab-runner
+)
+
+for v in ftp_proxy http_proxy https_proxy no_proxy; do
+  if [ -v ${v} ]; then
+    options+=(-e ${v}="${!v}")
+  fi
+done
+
+docker pull gitlab/gitlab-runner:latest
+
+# Ignore errors when stopping, the container might not run (yet)
+docker stop gitlab-runner || :
+docker rm -v gitlab-runner || :
+
+docker run "${options[@]}" gitlab/gitlab-runner:latest
