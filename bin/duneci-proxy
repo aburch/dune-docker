@@ -42,5 +42,5 @@ docker create --name ${name} \
   --restart always --read-only --security-opt no-new-privileges \
   -v /srv/${name}:/srv/squid:ro \
   duneci/proxy
-docket network connect ${network} ${name}
+docker network connect ${network} ${name}
 docker start ${name}
