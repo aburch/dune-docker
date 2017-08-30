@@ -114,6 +114,7 @@ check_interval = 0
     disable_cache = false
     volumes = ["/cache"]
     allowed_images = ["docker.io/duneci/*", "duneci/*"]
+    allowed_services = []
     pull_policy = "if-not-present"
     # See [Proxy setup](#proxy-setup) below:
     network_mode = "gitlab-ci-dune"
