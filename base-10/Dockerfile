@@ -18,7 +18,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   gcc-7 \
   gfortran \
   git \
-  git-lts \
+  git-lfs \
   gnuplot-nox \
   libadolc-dev \
   libalberta-dev \
