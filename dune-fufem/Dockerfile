@@ -1,4 +1,5 @@
 FROM duneci/dune:2.4
+ARG DUNECI_PARALLEL
 
 USER root
 WORKDIR /

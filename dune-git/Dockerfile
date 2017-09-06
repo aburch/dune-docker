@@ -1,4 +1,5 @@
 FROM duneci/base:9
+ARG DUNECI_PARALLEL
 
 USER duneci
 RUN duneci-install-module https://gitlab.dune-project.org/core/dune-common.git \

@@ -1,4 +1,5 @@
 FROM duneci/dune:git
+ARG DUNECI_PARALLEL
 
 USER duneci
 WORKDIR /duneci/modules

@@ -27,8 +27,14 @@ if [[ $# -lt 2 ]]; then
   usage
 fi
 
+parallel=
+
 while :; do
   case "${1}" in
+    --parallel)
+      parallel=1
+      shift
+      ;;
     -*)
       docker_opts+=("${1}")
       shift
@@ -40,6 +46,10 @@ while :; do
 done
 
 image="${1}"; shift
+
+if [[ -n "${parallel}" -a -v DUNECI_PARALLEL ]]; then
+  docker_opts+=(--build-arg=DUNECI_PARALLEL="${DUNECI_PARALLEL}")
+fi
 
 builddir="build/${image##*/}"
 if [[ -e ${builddir} ]]; then
