@@ -19,6 +19,10 @@ for var in ftp_proxy FTP_PROXY http_proxy HTTP_PROXY https_proxy HTTPS_PROXY no_
   fi
 done
 
+if [[ "${DUNECI_DOCKER_CACHE:-1}" = 0 ]]; then
+  docker_opts+=(--no-cache)
+fi
+
 if [[ $# -lt 2 ]]; then
   usage
 fi
