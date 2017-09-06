@@ -13,7 +13,7 @@ docker-build() {
 }
 
 docker_opts=()
-for var in ftp_proxy FTP_PROXY http_proxy HTTP_PROXY https_proxy HTTPS_PROXY no_proxy NO_PROXY; do
+for var in ftp_proxy http_proxy https_proxy no_proxy; do
   if [[ -n "${!var:-}" ]]; then
     docker_opts+=(--build-arg="${var}=${!var}")
   fi
