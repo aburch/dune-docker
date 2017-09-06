@@ -91,14 +91,14 @@ dune:2.4:
 dune:2.5:
  stage: stage2
  script:
- - ./bin/duneci-build-docker-image --no-cache duneci/dune:2.5 dune-2.5
+ - ./bin/duneci-build-docker-image duneci/dune:2.5 dune-2.5
  only:
  - master@ansgar/dune-docker
 
 dune:git:
  stage: stage2
  script:
- - ./bin/duneci-build-docker-image --parallel --no-cache duneci/dune:git dune-git
+ - ./bin/duneci-build-docker-image --parallel duneci/dune:git dune-git
  only:
  - master@ansgar/dune-docker
 
@@ -112,7 +112,7 @@ dune-fufem:2.4:
 dune-fufem:git:
  stage: stage3
  script:
- - ./bin/duneci-build-docker-image --parallel --no-cache duneci/dune-fufem:git dune-fufem-git
+ - ./bin/duneci-build-docker-image --parallel duneci/dune-fufem:git dune-fufem-git
  only:
  - master@ansgar/dune-docker
 
