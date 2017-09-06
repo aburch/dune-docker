@@ -47,7 +47,7 @@ done
 
 image="${1}"; shift
 
-if [[ -n "${parallel}" -a -v DUNECI_PARALLEL ]]; then
+if [[ -n "${parallel}" && -v DUNECI_PARALLEL ]]; then
   docker_opts+=(--build-arg=DUNECI_PARALLEL="${DUNECI_PARALLEL}")
 fi
 
