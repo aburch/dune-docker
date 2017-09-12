@@ -40,7 +40,13 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   python-numpy \
   python-vtk6 \
   python3 \
+  python3-dev \
+  python3-matplotlib \
+  python3-mpi4py \
   python3-numpy \
+  python3-pip \
+  python3-pytest \
+  python3-scipy \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci --uid 50000 duneci
 USER duneci
