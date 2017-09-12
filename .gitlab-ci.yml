@@ -13,6 +13,7 @@ pull base distributions:
  script:
  - docker pull debian:8
  - docker pull debian:stretch
+ - docker pull debian:buster
  - docker pull ubuntu:16.04
  - docker pull ubuntu:16.10
  only:
