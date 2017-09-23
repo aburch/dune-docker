@@ -75,7 +75,7 @@ docker exec gitlab-runner gitlab-runner -v
 
 See the [gitlab-runner changelog][] for a list of changes.
 
-  [gitlab-runner changelog]: https://gitlab.com/gitlab-org/gitlab-ci-multi-runner/blob/master/CHANGELOG.md
+  [gitlab-runner changelog]: https://gitlab.com/gitlab-org/gitlab-runner/blob/master/CHANGELOG.md
 
 Installing gitlab-runner
 ------------------------
