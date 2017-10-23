@@ -96,6 +96,13 @@ dune:2.5:
  only:
  - master@ansgar/dune-docker
 
+dune:2.6:
+ stage: stage2
+ script:
+ - ./bin/duneci-build-docker-image --parallel duneci/dune:2.6 dune-2.6
+ only:
+ - master@ansgar/dune-docker
+
 dune:git:
  stage: stage2
  script:
@@ -129,6 +136,7 @@ publish:
  - docker push duneci/dune:2.3
  - docker push duneci/dune:2.4
  - docker push duneci/dune:2.5
+ - docker push duneci/dune:2.6
  - docker push duneci/dune:git
  - docker push duneci/dune-fufem:2.4
  - docker push duneci/dune-fufem:git

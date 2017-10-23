@@ -17,6 +17,7 @@ The current images are:
 | duneci/dune:2.3          | duneci/base:8     | DUNE 2.3 core modules (Debian packages)                    |
 | duneci/dune:2.4          | duneci/base:16.04 | DUNE 2.4 core modules (Debian packages)                    |
 | duneci/dune:2.5          | duneci/base:9     | DUNE 2.5 core and staging modules (Debian packages)        |
+| duneci/dune:2.6          | duneci/base:10    | DUNE 2.6 core and staging modules (Git 2.6 branch)         |
 | duneci/dune:git          | duneci/base:9     | DUNE master core and staging modules (Git)                 |
 | duneci/dune-fufem:2.4    | duneci/dune:2.4   | dune-{fufem,functions,solvers,typetree} (2.4 branch)       |
 | duneci/dune-fufem:git    | duneci/dune:git   | dune-{elasticity,fufem,grid-glue,solvers} (master branch)  |
