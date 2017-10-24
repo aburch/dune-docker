@@ -50,6 +50,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   python3-pip \
   python3-pytest \
   python3-scipy \
+  vc-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci --uid 50000 duneci
 USER duneci
