@@ -1,1 +1,1 @@
-CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fdiagnostics-color=always'"
+CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/g++ -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fdiagnostics-color=always' ${DUNECI_PARALLEL:+-DDUNE_MAX_TEST_CORES=${DUNECI_PARALLEL}}"
