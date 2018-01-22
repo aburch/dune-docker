@@ -30,6 +30,7 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   libgtest-dev \
   libltdl-dev \
   libscotchmetis-dev \
+  libscotchparmetis-dev \
   libsuitesparse-dev \
   libsuperlu-dev \
   libtinyxml2-dev \
@@ -52,6 +53,8 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   python3-pytest \
   python3-scipy \
   vc-dev \
+  libgmp-dev \
+  libeigen3-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN adduser --disabled-password --home /duneci --uid 50000 duneci
 USER duneci
