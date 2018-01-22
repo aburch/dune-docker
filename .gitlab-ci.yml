@@ -154,5 +154,7 @@ publish:
  - docker push duneci/dune:git
  - docker push duneci/dune-fufem:2.4
  - docker push duneci/dune-fufem:git
+ - docker push duneci/dune-pdelab-deps:2.6
+ - docker push duneci/dune-pdelab-deps:git
  only:
  - master@ansgar/dune-docker
