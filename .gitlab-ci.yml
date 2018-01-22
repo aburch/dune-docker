@@ -124,6 +124,20 @@ dune-fufem:git:
  only:
  - master@ansgar/dune-docker
 
+ dune-pdelab-deps:2.6:
+ stage: stage3
+ script:
+ - ./bin/duneci-build-docker-image --parallel duneci/dune-pdelab-deps:2.6 dune-pdelab-deps-2.6
+ only:
+ - master@ansgar/dune-docker
+
+ dune-pdelab-deps:git:
+ stage: stage3
+ script:
+ - ./bin/duneci-build-docker-image --parallel duneci/dune-pdelab-deps:git dune-pdelab-deps-git
+ only:
+ - master@ansgar/dune-docker
+
 publish:
  stage: publish
  script:
