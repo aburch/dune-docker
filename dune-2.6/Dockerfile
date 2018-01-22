@@ -8,5 +8,5 @@ RUN duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/core/d
   && duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/core/dune-grid.git \
   && duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/core/dune-istl.git \
   && duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/core/dune-localfunctions.git \
-  && duneci-install-module https://gitlab.dune-project.org/staging/dune-typetree.git \
-  && duneci-install-module https://gitlab.dune-project.org/staging/dune-functions.git
+  && duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/staging/dune-typetree.git \
+  && duneci-install-module -b releases/2.6 https://gitlab.dune-project.org/staging/dune-functions.git
