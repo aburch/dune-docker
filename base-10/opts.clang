@@ -1,1 +1,1 @@
-CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/clang++-4.0 -DCMAKE_C_COMPILER=/usr/bin/clang-4.0 -DCXX_MAX_STANDARD=17 -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fcolor-diagnostics -ftemplate-backtrace-limit=0' ${DUNECI_PARALLEL:+-DDUNE_MAX_TEST_CORES=${DUNECI_PARALLEL}}"
+CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=/usr/bin/clang++-5.0 -DCMAKE_C_COMPILER=/usr/bin/clang-5.0 -DCXX_MAX_STANDARD=17 -DCMAKE_CXX_FLAGS='-O2 -g -Wall -fcolor-diagnostics -ftemplate-backtrace-limit=0' ${DUNECI_PARALLEL:+-DDUNE_MAX_TEST_CORES=${DUNECI_PARALLEL}}"
