@@ -1,0 +1,11 @@
+#! /bin/bash
+
+bindir=$(dirname "$0")
+export PATH="${bindir}:$PATH"
+
+duneci-proxy gitlab-ci-dune dune-proxy
+duneci-proxy gitlab-ci-dune fu-proxy
+duneci-runner
+
+echo "gitlab-runner version information:"
+docker exec gitlab-runner gitlab-runner -v
