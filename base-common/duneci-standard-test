@@ -21,6 +21,32 @@ if [[ -v DUNECI_PARALLEL ]]; then
   parallel_opts="-j${DUNECI_PARALLEL}"
 fi
 
+# Evaluate $DUNECI_TEST_LABELS and set $build_test_target and
+# $labels_regex_arg accordingly.  Labels in $DUNECI_TEST_LABELS may be
+# seperated by whitespace or ','.
+handle_labels()
+{
+  # use a function to automatically restore IFS
+  local IFS=$IFS, label labels labels_regexs
+  labels=(${DUNECI_TEST_LABELS-})
+
+  if [[ ${#labels[@]} -eq 0 ]]; then
+    build_test_targets=(build_tests)
+    labels_regex_arg=()
+  else
+    build_test_targets=()
+    labels_regexs=()
+    for label in "${labels[@]}"; do
+      build_test_targets+=("build_${label}_tests")
+      labels_regexs+=("^${label}\$")
+    done
+    # This will join all regexps using '|' from IFS
+    IFS="|"
+    labels_regex_arg=(-L "${labels_regexs[*]}")
+  fi
+}
+handle_labels
+
 # Allow oversubscription (tests might want to try having more ranks
 # than environment has processors) and force degraded mode (as we
 # might run multiple tests in parallel and this is not good with
@@ -35,5 +61,5 @@ export OMPI_MCA_mpi_yield_when_idle=1
 set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
-${DUNECONTROL} --current "${@}" make ${parallel_opts} all build_tests
-${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts}
+${DUNECONTROL} --current "${@}" make ${parallel_opts} all "${build_test_targets[@]}"
+${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "${labels_regex_arg[@]}"
