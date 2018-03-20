@@ -37,6 +37,16 @@ handle_labels()
     build_test_targets=()
     labels_regexs=()
     for label in "${labels[@]}"; do
+      # ensure the labels can be safely handled
+      if [[ -z $label ]] || [[ $label == *[![:word:]-]* ]]; then
+          cat >&2 <<EOF
+duneci-standard-test: Error: Invalid label in DUNECI_TEST_LABELS: '$label'
+duneci-standard-test: Note: Only alphanumeric characters plus '_' and '-' are
+duneci-standard-test: Note: allowed in label names, and the names must be
+duneci-standard-test: Note: non-empty.
+EOF
+          exit 2
+      fi
       build_test_targets+=("build_${label}_tests")
       labels_regexs+=("^${label}\$")
     done
