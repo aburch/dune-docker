@@ -32,7 +32,7 @@ handle_labels()
 
   if [[ ${#labels[@]} -eq 0 ]]; then
     build_test_targets=(build_tests)
-    labels_regex_arg=()
+    labels_regex_arg=
   else
     build_test_targets=()
     labels_regexs=()
@@ -52,7 +52,9 @@ EOF
     done
     # This will join all regexps using '|' from IFS
     IFS="|"
-    labels_regex_arg=(-L "${labels_regexs[*]}")
+    labels_regex_arg="${labels_regexs[*]}"
+    # This will quote the result for when dunecontrol evals the parameters
+    labels_regex_arg="-L ${labels_regex_arg@Q}"
   fi
 }
 handle_labels
@@ -72,4 +74,4 @@ set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
 ${DUNECONTROL} --current "${@}" make ${parallel_opts} all "${build_test_targets[@]}"
-${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "${labels_regex_arg[@]}"
+${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "$labels_regex_arg"
