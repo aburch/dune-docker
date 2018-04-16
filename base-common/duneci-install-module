@@ -27,7 +27,7 @@ fi
 
 
 branch="${DUNECI_BRANCH:-}"
-recursive=0
+recursive=
 
 while :; do
     case "${1}" in
@@ -55,11 +55,11 @@ if [[ -d "${module}" ]]; then
     exit 1
 fi
 
-git_clone_opts=(--depth=1 --no-single-branch "${recursive}")
+git_clone_opts=(--depth=1 --no-single-branch)
 if [[ -n "${branch}" ]]; then
     git_clone_opts+=(-b "${branch}")
 fi
-if [[ ${recursive} ]]; then
+if [[ -n "${recursive}" ]]; then
     git_clone_opts+=("--recursive")
 fi
 
