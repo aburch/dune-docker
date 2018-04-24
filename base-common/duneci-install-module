@@ -9,6 +9,7 @@ usage() {
     echo >&2
     echo "options:" >&2
     echo "  -b <branch>, --branch <branch>: Install branch <branch> of the module." >&2
+    echo "  -r, --recursive: Clone the git repository with --recursive (for git submodules)." >&2
     echo >&2
     echo "environment variables:" >&2
     echo "  DUNECI_BRANCH:" >&2
@@ -26,12 +27,17 @@ fi
 
 
 branch="${DUNECI_BRANCH:-}"
+recursive=
 
 while :; do
     case "${1}" in
         -b|--branch)
             branch="${2}"
             shift 2
+            ;;
+        -r|--recursive)
+            recursive=1
+            shift 1
             ;;
         *)
             break
@@ -52,6 +58,9 @@ fi
 git_clone_opts=(--depth=1 --no-single-branch)
 if [[ -n "${branch}" ]]; then
     git_clone_opts+=(-b "${branch}")
+fi
+if [[ -n "${recursive}" ]]; then
+    git_clone_opts+=("--recursive")
 fi
 
 git clone "${git_clone_opts[@]}" "${repo}"
