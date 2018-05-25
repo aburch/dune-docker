@@ -21,6 +21,19 @@ if [[ -v DUNECI_PARALLEL ]]; then
   parallel_opts="-j${DUNECI_PARALLEL}"
 fi
 
+assert_label_valid()
+{
+  if [[ $1 != +([[:word:]-]) ]]; then
+    cat >&2 <<EOF
+duneci-standard-test: Error: Invalid label in DUNECI_TEST_LABELS: '$label'
+duneci-standard-test: Note: Only alphanumeric characters plus '_' and '-' are
+duneci-standard-test: Note: allowed in label names, and the names must be
+duneci-standard-test: Note: non-empty.
+EOF
+    exit 2
+  fi
+}
+
 # Parse labels in $1 and set ${parsed_targets[@]} and ${parsed_selectors[@]}
 # accordingly.  Labels in $1 may be seperated by whitespace or ','.
 parse_labels()
@@ -32,17 +45,11 @@ parse_labels()
   regexs=()
   for label in $1; do
     # ensure the labels can be safely handled
-    if [[ -z $label ]] || [[ $label == *[![:word:]-]* ]]; then
-      cat >&2 <<EOF
-duneci-standard-test: Error: Invalid label in DUNECI_TEST_LABELS: '$label'
-duneci-standard-test: Note: Only alphanumeric characters plus '_' and '-' are
-duneci-standard-test: Note: allowed in label names, and the names must be
-duneci-standard-test: Note: non-empty.
-EOF
-      exit 2
-    fi
+    assert_label_valid "$label"
+
     parsed_targets+=("build_${label}_tests")
     regexs+=("^${label}\$")
+
     status=0 # we found at least one label
   done
 
