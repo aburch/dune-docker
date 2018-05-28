@@ -21,6 +21,56 @@ if [[ -v DUNECI_PARALLEL ]]; then
   parallel_opts="-j${DUNECI_PARALLEL}"
 fi
 
+assert_label_valid()
+{
+  if [[ $1 != +([[:word:]-]) ]]; then
+    cat >&2 <<EOF
+duneci-standard-test: Error: Invalid label in DUNECI_TEST_LABELS: '$label'
+duneci-standard-test: Note: Only alphanumeric characters plus '_' and '-' are
+duneci-standard-test: Note: allowed in label names, and the names must be
+duneci-standard-test: Note: non-empty.
+EOF
+    exit 2
+  fi
+}
+
+# Parse labels in $1 and set ${parsed_targets[@]} and ${parsed_selectors[@]}
+# accordingly.  Labels in $1 may be seperated by whitespace or ','.
+parse_labels()
+{
+  # use a function to automatically restore IFS
+  local IFS="$IFS," label regexs status=1
+
+  parsed_targets=()
+  regexs=()
+  for label in $1; do
+    # ensure the labels can be safely handled
+    assert_label_valid "$label"
+
+    parsed_targets+=("build_${label}_tests")
+    regexs+=("^${label}\$")
+
+    status=0 # we found at least one label
+  done
+
+  parsed_selectors=()
+  if [[ ${#regexs[@]} -gt 0 ]]; then
+    # This will join all regexps using '|' from IFS
+    IFS="|"
+    parsed_selectors=(-L "${regexs[*]}")
+  fi
+
+  return $status
+}
+
+build_test_targets=(build_tests) # passed to make/ninja to build tests
+select_test_args=()              # passed to ctest to select tests
+if parse_labels "${DUNECI_TEST_LABELS-}"; then
+    build_test_target=("${parsed_targets[@]}")
+    select_test_args=("${parsed_selectors[@]}")
+fi
+
+
 # Allow oversubscription (tests might want to try having more ranks
 # than environment has processors) and force degraded mode (as we
 # might run multiple tests in parallel and this is not good with
@@ -35,5 +85,6 @@ export OMPI_MCA_mpi_yield_when_idle=1
 set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
-${DUNECONTROL} --current "${@}" make ${parallel_opts} all build_tests
-${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts}
+${DUNECONTROL} --current "${@}" make ${parallel_opts} all "${build_test_targets[@]}"
+# note the extra quoting for select_test_args to protect it from dunecontrol evaling it
+${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "${select_test_args[@]@Q}"
