@@ -14,8 +14,6 @@ RUN apt-get update && apt-get dist-upgrade --no-install-recommends --yes \
   coinor-libipopt-dev \
   curl \
   flex \
-  g++-7 \
-  gcc-7 \
   gfortran \
   git \
   git-lfs \
