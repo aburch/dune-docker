@@ -85,6 +85,10 @@ export OMPI_MCA_mpi_yield_when_idle=1
 set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
-${DUNECONTROL} --current "${@}" make ${parallel_opts} all "${build_test_targets[@]}"
+${DUNECONTROL} --current "${@}" make ${parallel_opts} all
+if [[ "${DUNECI_TEST_INSTALL:-0}" != 0 ]] ; then
+    ${DUNECONTROL} --current "${@}" make ${parallel_opts} install
+fi
+${DUNECONTROL} --current "${@}" make ${parallel_opts} "${build_test_targets[@]}"
 # note the extra quoting for select_test_args to protect it from dunecontrol evaling it
 ${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "${select_test_args[@]@Q}"
