@@ -36,7 +36,7 @@ set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
 ${DUNECONTROL} --current "${@}" make ${parallel_opts} all
-if [[ -v DUNECI_TEST_INSTALL ]] ; then
+if [[ "${DUNECI_TEST_INSTALL:-0}" != 0 ]] ; then
     ${DUNECONTROL} --current "${@}" make ${parallel_opts} install
 fi
 ${DUNECONTROL} --current "${@}" make ${parallel_opts} build_tests
