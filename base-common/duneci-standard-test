@@ -35,5 +35,9 @@ export OMPI_MCA_mpi_yield_when_idle=1
 set -x
 ${DUNECONTROL} --current "${@}" vcsetup
 ${DUNECONTROL} --current "${@}" configure
-${DUNECONTROL} --current "${@}" make ${parallel_opts} all build_tests
+${DUNECONTROL} --current "${@}" make ${parallel_opts} all
+if [[ -v DUNECI_TEST_INSTALL ]] ; then
+    ${DUNECONTROL} --current "${@}" make ${parallel_opts} install
+fi
+${DUNECONTROL} --current "${@}" make ${parallel_opts} build_tests
 ${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts}
