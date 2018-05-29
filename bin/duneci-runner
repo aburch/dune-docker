@@ -5,6 +5,7 @@ set -u
 
 options=(
   -d --name gitlab-runner --restart always
+  --read-only
   --stop-signal SIGQUIT
   -v /var/run/docker.sock:/var/run/docker.sock
   -v /srv/gitlab-runner/config:/etc/gitlab-runner
