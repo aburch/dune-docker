@@ -91,4 +91,4 @@ if [[ "${DUNECI_TEST_INSTALL:-0}" != 0 ]] ; then
 fi
 ${DUNECONTROL} --current "${@}" make ${parallel_opts} "${build_test_targets[@]}"
 # note the extra quoting for select_test_args to protect it from dunecontrol evaling it
-${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} "${select_test_args[@]@Q}"
+${DUNECONTROL} --current "${@}" bexec ${DUNE_CTEST} ${parallel_opts} ${select_test_args[@]:+"${select_test_args[@]@Q}"}
