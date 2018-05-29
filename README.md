@@ -13,6 +13,7 @@ The current images are:
 | duneci/base:9            | debian:9          | Debian 9 with gcc 6.3, clang 3.8, cmake 3.7                |
 | duneci/base:10           | debian:10         | Debian 9 with gcc 7, clang 4.0, cmake 3.7                  |
 | duneci/base:16.04        | ubuntu:16.04      | Ubuntu LTS 16.04 with gcc 5.4.0, clang 3.8.0, cmake 3.5.1  |
+| duneci/base:18.04        | ubuntu:18.04      | Ubuntu LTS 18.04 with gcc 7.3, clang 6, cmake 3.10.2       |
 | duneci/dune:2.3          | duneci/base:8     | DUNE 2.3 core modules (Debian packages)                    |
 | duneci/dune:2.4          | duneci/base:16.04 | DUNE 2.4 core modules (Debian packages)                    |
 | duneci/dune:2.5          | duneci/base:9     | DUNE 2.5 core and staging modules (Debian packages)        |
