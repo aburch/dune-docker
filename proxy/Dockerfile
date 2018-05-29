@@ -1,6 +1,7 @@
 FROM debian:stretch
 MAINTAINER Ansgar.Burchardt@tu-dresden.de
 RUN \
+  export DEBIAN_FRONTEND=noninteractive; \
   rm -f /etc/apt/apt.conf.d/docker-gzip-indexes \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get update && apt-get dist-upgrade --no-install-recommends --yes \

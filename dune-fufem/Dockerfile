@@ -3,7 +3,8 @@ ARG DUNECI_PARALLEL
 
 USER root
 WORKDIR /
-RUN apt-get update && apt-get install --no-install-recommends --yes \
+RUN export DEBIAN_FRONTEND=noninteractive; \
+  apt-get update && apt-get install --no-install-recommends --yes \
   libdune-grid-glue-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 

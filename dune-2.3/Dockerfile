@@ -2,7 +2,8 @@ FROM duneci/base:8
 
 USER root
 WORKDIR /
-RUN apt-get update && apt-get install --no-install-recommends --yes \
+RUN export DEBIAN_FRONTEND=noninteractive; \
+  apt-get update && apt-get install --no-install-recommends --yes \
   libdune-common-dev \
   libdune-geometry-dev \
   libdune-grid-dev \
