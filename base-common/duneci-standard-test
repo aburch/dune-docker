@@ -66,7 +66,7 @@ parse_labels()
 build_test_targets=(build_tests) # passed to make/ninja to build tests
 select_test_args=()              # passed to ctest to select tests
 if parse_labels "${DUNECI_TEST_LABELS-}"; then
-    build_test_target=("${parsed_targets[@]}")
+    build_test_targets=("${parsed_targets[@]}")
     select_test_args=("${parsed_selectors[@]}")
 fi
 
