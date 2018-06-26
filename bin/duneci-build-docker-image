@@ -145,6 +145,18 @@ for d in "$@"; do
   cp -t "${builddir}" -- "${d}"/*
 done
 
+base_image=$(head -n 1 "${builddir}/Dockerfile" | cut -d " " -f 2)
+base_image_filename=$(sha256sum <<<"${base_image}" | cut -d " " -f 1)
+
+if [[ -f output/images/${base_image_filename}.image ]] ; then
+
+  if temp_base_image=$(grep '^temp_image:' output/images/${base_image_filename}.image | cut -d " " -f 2) ; then
+    echo "Replacing standard base image '${base_image}' with corresponding '${temp_base_image}' from current pipeline"
+    docker pull ${temp_base_image}
+    docker tag ${temp_base_image} ${base_image}
+  fi
+fi
+
 # pull existing image and use as cache to avoid endless rebuilds
 if [[ "$cache" = yes ]] ; then
   echo "Trying to pull existing image as cache..."
