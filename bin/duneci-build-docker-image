@@ -94,4 +94,23 @@ done
 
 docker-build -t "${image}" "${builddir}"
 
+# We push the resulting image to a temporary tag named after the pipeline id
+# We also put a file with information about the temporary tag and the desired final tag into a
+# file that will be published as an artifact.
+
+echo "Pushing image ${temp_image} to repository"
+docker push "${temp_image}"
+
+echo "Storing information about old and new image in artifact"
+mkdir -p output/images
+filename=$(sha256sum <<<"${image}" | cut -d " " -f 1)
+echo -e "image: ${image}\ntemp_image: ${temp_image}" > output/images/${filename}.image
+if get_manifest "${untagged_image}" "${tag}" ; then
+  echo "${manifest_data}" > output/images/${filename}.old-manifest
+  echo "${manifest_digest}" > output/images/${filename}.old-digest
+fi
+get_manifest "${untagged_image}" "${temp_tag}"
+echo "${manifest_data}" > output/images/${filename}.new-manifest
+echo "${manifest_digest}" > output/images/${filename}.new-digest
+
 rm -rf -- "${builddir}"
