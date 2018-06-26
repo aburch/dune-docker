@@ -12,6 +12,29 @@ docker-build() {
   docker build ${docker_opts[@]:+"${docker_opts[@]}"} "${@}"
 }
 
+
+gitlab_server=$(sed 's|^\(https\?\)://[^@]\+@\([^/]\+\)/.*$|\1://\2|' <<<"${CI_REPOSITORY_URL}")
+
+get_bearer_token() {
+  token=$(curl -s --user "gitlab-ci-token:${CI_JOB_TOKEN}" "${gitlab_server}/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:$1:pull")
+  token=$(sed 's/.*:"\(.*\)"}/\1/' <<<"${token}")
+}
+
+get_manifest() {
+  local image
+  image=${1#*/}
+  get_bearer_token ${image}
+  manifest_data=$(curl -fs -D manifest_headers -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -H "Authorization: Bearer ${token}" "https://${CI_REGISTRY}/v2/${image}/manifests/$2")
+
+  if [[ $? -ne 0 ]] ; then
+    echo "Could not get manifest for '$1:$2'"
+    return 1
+  fi
+  manifest_digest=$(grep "^Docker-Content-Digest:" < manifest_headers | cut -d " " -f 2)
+  manifest_digest=${manifest_digest%$'\r'}
+  rm -f manifest_headers
+}
+
 docker_opts=()
 for var in ftp_proxy http_proxy https_proxy no_proxy; do
   if [[ -n "${!var:-}" ]]; then
