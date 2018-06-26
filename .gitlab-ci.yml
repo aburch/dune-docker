@@ -1,159 +1,269 @@
 ---
-image: duneci/docker-builder
 
 stages:
- - stage0
- - stage1
- - stage2
- - stage3
- - publish
+  - service
+  - base
+  - core
+  - modules
+  - finalize
+  - rollback
 
-pull base distributions:
- stage: stage0
- script:
- - docker pull debian:8
- - docker pull debian:stretch
- - docker pull debian:buster
- - docker pull ubuntu:16.04
- - docker pull ubuntu:18.04
- only:
- - master@ansgar/dune-docker
 
-docker-builder:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/docker-builder docker-builder
- only:
- - master@ansgar/dune-docker
+# ---------------------------------------------------------------------
+#
+# common variables for the various stages
+#
+# ---------------------------------------------------------------------
 
-proxy:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/proxy proxy
- only:
- - master@ansgar/dune-docker
+.service-variables:
+  variables: &service-variables
+    DUNECI_DOCKER_CACHE_SERVICE: 1
+    CORES: 1
 
-base:8:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/base:8 base-common base-8
- only:
- - master@ansgar/dune-docker
+.base-variables:
+  variables: &base-variables
+    IMAGE: $CI_REGISTRY_IMAGE/$DISTRO:$VERSION
+    SOURCE_DIRS: base-common $DISTRO-$VERSION
+    DUNECI_DOCKER_CACHE_BASE: 1
+    CORES: 1
 
-base:9:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/base:9 base-common base-9
- only:
- - master@ansgar/dune-docker
+.core-variables:
+  variables: &core-variables
+    IMAGE: $CI_REGISTRY_IMAGE/dune:$VERSION
+    SOURCE_DIRS: dune-$VERSION
+    BUILD_ARGS: --parallel
+    DUNECI_DOCKER_CACHE_CORE: 1
+    CORES: 4
 
-base:10:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/base:10 base-common base-10
- only:
- - master@ansgar/dune-docker
+.module-variables:
+  variables: &module-variables
+    IMAGE: $CI_REGISTRY_IMAGE/dune-$MODULE:$VERSION
+    SOURCE_DIRS: dune-$MODULE-$VERSION
+    BUILD_ARGS: --parallel
+    DUNECI_DOCKER_CACHE_MODULES: 1
+    CORES: 4
 
-base:16.04:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/base:16.04 base-common base-16.04
- only:
- - master@ansgar/dune-docker
 
-base:18.04:
- stage: stage1
- script:
- - ./bin/duneci-build-docker-image duneci/base:18.04 base-common base-18.04
- only:
- - master@ansgar/dune-docker
+# ---------------------------------------------------------------------
+#
+# Base template for all jobs that build a Docker image
+#
+# ---------------------------------------------------------------------
 
-base:8-backports:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image duneci/base:8-backports base-8-backports
- only:
- - master@ansgar/dune-docker
 
-dune:2.3:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image duneci/dune:2.3 dune-2.3
- only:
- - master@ansgar/dune-docker
+.base: &base
+  before_script:
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin=true $CI_REGISTRY
+  script:
+    - echo "Building $IMAGE..."
+    - ./bin/duneci-build-docker-image $BUILD_ARGS $IMAGE $SOURCE_DIRS
+  artifacts:
+    paths:
+      - output/images/
+    expire_in: 1d
+  tags:
+    - "services:dind"
+    - "dind:cores:4"
+  only:
+    refs:
+      - branches@docker/images
 
-dune:2.4:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image duneci/dune:2.4 dune-2.4
- only:
- - master@ansgar/dune-docker
 
-dune:2.5:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image duneci/dune:2.5 dune-2.5
- only:
- - master@ansgar/dune-docker
+# ---------------------------------------------------------------------
+#
+# image templates for the various stages
+#
+# ---------------------------------------------------------------------
 
-dune:2.6:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune:2.6 dune-2.6
- only:
- - master@ansgar/dune-docker
+
+.service-image: &service-image
+  <<: *base
+  stage: service
+
+.base-image: &base-image
+  <<: *base
+  stage: base
+
+.core-image: &core-image
+  <<: *base
+  stage: core
+
+.module-image: &module-image
+  <<: *base
+  stage: modules
+
+
+# ---------------------------------------------------------------------
+#
+# service images
+#
+# ---------------------------------------------------------------------
+
+
+docker:
+  <<: *service-image
+  variables:
+    <<: *service-variables
+    IMAGE: $CI_REGISTRY_IMAGE/service/docker:latest
+    SOURCE_DIRS: docker
+
+
+# ---------------------------------------------------------------------
+#
+# base images
+#
+# ---------------------------------------------------------------------
+
+
+debian:9:
+  <<: *base-image
+  variables:
+    <<: *base-variables
+    DISTRO: debian
+    VERSION: 9
+
+debian:10:
+  <<: *base-image
+  variables:
+    <<: *base-variables
+    DISTRO: debian
+    VERSION: 10
+
+ubuntu:16.04:
+  <<: *base-image
+  variables:
+    <<: *base-variables
+    DISTRO: ubuntu
+    VERSION: "16.04"
+
+ubuntu:18.04:
+  <<: *base-image
+  variables:
+    <<: *base-variables
+    DISTRO: ubuntu
+    VERSION: "18.04"
+
+
+# ---------------------------------------------------------------------
+#
+# core images
+#
+# ---------------------------------------------------------------------
+
 
 dune:git:
- stage: stage2
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune:git dune-git
- only:
- - master@ansgar/dune-docker
+  <<: *core-image
+  variables:
+    <<: *core-variables
+    VERSION: "git"
+
+dune:2.4:
+  <<: *core-image
+  variables:
+    <<: *core-variables
+    VERSION: "2.4"
+
+dune:2.5:
+  <<: *core-image
+  variables:
+    <<: *core-variables
+    VERSION: "2.5"
+
+dune:2.6:
+  <<: *core-image
+  variables:
+    <<: *core-variables
+    VERSION: "2.6"
+
+
+# ---------------------------------------------------------------------
+#
+# module images
+#
+# ---------------------------------------------------------------------
+
 
 dune-fufem:2.4:
- stage: stage3
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune-fufem:2.4 dune-fufem
- only:
- - master@ansgar/dune-docker
+  <<: *module-image
+  variables:
+    <<: *module-variables
+    MODULE: fufem
+    VERSION: "2.4"
 
 dune-fufem:git:
- stage: stage3
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune-fufem:git dune-fufem-git
- only:
- - master@ansgar/dune-docker
+  <<: *module-image
+  variables:
+    <<: *module-variables
+    MODULE: fufem
+    VERSION: "git"
 
 dune-pdelab-deps:2.6:
- stage: stage3
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune-pdelab-deps:2.6 dune-pdelab-deps-2.6
- only:
- - master@ansgar/dune-docker
+  <<: *module-image
+  variables:
+    <<: *module-variables
+    MODULE: pdelab-deps
+    VERSION: "2.6"
 
 dune-pdelab-deps:git:
- stage: stage3
- script:
- - ./bin/duneci-build-docker-image --parallel duneci/dune-pdelab-deps:git dune-pdelab-deps-git
- only:
- - master@ansgar/dune-docker
+  <<: *module-image
+  variables:
+    <<: *module-variables
+    MODULE: pdelab-deps
+    VERSION: "git"
 
-publish:
- stage: publish
- script:
- - docker push duneci/base:8
- - docker push duneci/base:9
- - docker push duneci/base:10
- - docker push duneci/base:16.04
- - docker push duneci/base:8-backports
- - docker push duneci/dune:2.3
- - docker push duneci/dune:2.4
- - docker push duneci/dune:2.5
- - docker push duneci/dune:2.6
- - docker push duneci/dune:git
- - docker push duneci/dune-fufem:2.4
- - docker push duneci/dune-fufem:git
- - docker push duneci/dune-pdelab-deps:2.6
- - docker push duneci/dune-pdelab-deps:git
- only:
- - master@ansgar/dune-docker
+
+# ---------------------------------------------------------------------
+#
+# deploy / cleanup
+#
+# ---------------------------------------------------------------------
+
+
+cleanup-temp-images:
+  stage: finalize
+  image: $CI_REGISTRY_IMAGE/service/docker:latest
+  variables:
+    CORES: 1
+  script:
+    - ./bin/duneci-process-images cleanup
+  tags:
+    - "site:hd"
+    - "cores:1"
+  only:
+    refs:
+      - branches@docker/images
+  except:
+    refs:
+      - master@docker/images
+
+deploy:
+  environment:
+    name: production
+    url: https://gitlab.dune-project.org/docker/ci/container_registry
+  stage: finalize
+  image: $CI_REGISTRY_IMAGE/service/docker:latest
+  variables:
+    CORES: 1
+  script:
+    - ./bin/duneci-process-images deploy
+  tags:
+    - "site:hd"
+    - "cores:1"
+  only:
+    refs:
+      - master@docker/images
+
+restore-images:
+  stage: rollback
+  when: on_failure
+  image: $CI_REGISTRY_IMAGE/service/docker:latest
+  variables:
+    CORES: 1
+  script:
+    - ./bin/duneci-process-images rollback
+  tags:
+    - "site:hd"
+    - "cores:1"
+  only:
+    refs:
+      - branches@docker/images

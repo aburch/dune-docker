@@ -1,0 +1,137 @@
+#! /bin/bash
+
+set -e
+set -u
+
+mode=$1
+
+gitlab_server=$(sed 's|^\(https\?\)://[^@]\+@\([^/]\+\)/.*$|\1://\2|' <<<"${CI_REPOSITORY_URL}")
+
+get_bearer_token() {
+  token=$(curl -fs --user "${CI_REGISTRY_ADMIN_USERNAME}:${CI_REGISTRY_ADMIN_TOKEN}" "${gitlab_server}/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:$1:*")
+  if [[ $? -ne 0 ]] ; then
+      echo "  ERROR: Invalid admin credentials for repository, aborting!"
+      exit 1
+  fi
+  token=$(sed 's/.*:"\(.*\)"}/\1/' <<<"${token}")
+}
+
+get_manifest() {
+  get_bearer_token $1
+  manifest_data=$(curl -s -D manifest_headers -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -H "Authorization: Bearer ${token}" "https://${CI_REGISTRY}/v2/$1/manifests/$2")
+
+  if [[ $? -ne 0 ]] ; then
+      echo "  Could not get manifest for '$1:$2'"
+      return 1
+  fi
+  manifest_digest=$(grep "^Docker-Content-Digest:" < manifest_headers | cut -d " " -f 2)
+  manifest_digest=${manifest_digest%$'\r'}
+  rm -f manifest_headers
+}
+
+delete_manifest() {
+    get_bearer_token $1
+    echo "  Deleting image '$1:$2'"
+    if ! resp=$(curl -sf -X DELETE -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -H "Authorization: Bearer ${token}" "https://${CI_REGISTRY}/v2/$1/manifests/$3" 2>&1) ; then
+        return 1
+    fi
+}
+
+push_manifest() {
+    get_bearer_token $1
+    if ! resp=$(curl -vf -X PUT -H "Content-Type: application/vnd.docker.distribution.manifest.v2+json" -H "Authorization: Bearer ${token}" -d "$3" "https://${CI_REGISTRY}/v2/$1/manifests/$2" 2>&1) ; then
+        return 1
+    fi
+}
+
+
+if [[ "${mode}" == rollback && ! -d output/images ]] ; then
+   # if there are no artifacts, there is nothing to do
+   echo "No images created, nothing to do"
+   exit 0
+fi
+
+for path in output/images/*.image ; do
+    tagged_image="$(grep '^image: ' ${path} | cut -d ' ' -f 2)"
+    tagged_temp_image="$(grep '^temp_image: ' ${path} | cut -d ' ' -f 2)"
+    image_tag=${tagged_image#*:}
+    image=${tagged_image%:*}
+    temp_image_tag=${tagged_temp_image#*:}
+    temp_image=${tagged_temp_image%:*}
+
+    # strip leading registry name from images
+    image=${image#*/}
+    temp_image=${temp_image#*/}
+
+    base=${path%.image}
+    new_manifest="@${base}.new-manifest"
+    new_digest="$(<${base}.new-digest)"
+    if [[ -f ${base}.old_manifest ]] ; then
+        old_manifest="@${base}.old-manifest"
+        old_digest="$(<${base}.old-digest)"
+    else
+        old_manifest=""
+        old_digest=""
+    fi
+
+    case "${mode}" in
+
+        deploy)
+
+            echo "Committing new version for '${tagged_image}'"
+            get_manifest ${temp_image} "${temp_image_tag}"
+            delete_manifest ${temp_image} "${temp_image_tag}" "${manifest_digest}"
+            push_manifest ${image} "${image_tag}" "${new_manifest}"
+
+            ;;
+
+        cleanup)
+
+            echo "Removing temporary image '${tagged_image}'"
+
+            # make sure the manifest actually got pushed to the registry
+            get_manifest ${temp_image} "${temp_image_tag}"
+
+            delete_manifest ${temp_image} "${temp_image_tag}" "${manifest_digest}"
+
+            ;;
+
+        rollback)
+
+            echo "Rolling back '${tagged_image}'"
+            if get_manifest ${temp_image} "${temp_image_tag}" ; then
+                delete_temp=1
+                temp_image_digest="${manifest_digest}"
+            else
+                echo "  Could not find '${tagged_temp_image}', skipping"
+                delete_temp=0
+            fi
+
+            if get_manifest ${image} "${image_tag}" ; then
+                if [[ "${manifest_digest}" = "${new_digest}" ]] ; then
+                    echo "  New version was pushed to tag, restoring old version"
+                    push_old=1
+                else
+                    push_old=0
+                fi
+            else
+                if [[ -n "${old_manifest}" ]] ; then
+                    echo "  Could not find '${tagged_image}' anymore, restoring to old state"
+                    push_old=1
+                fi
+            fi
+
+            if [[ delete_temp -eq 1 ]] ; then
+                delete_manifest ${temp_image} "${temp_image_tag}" "${temp_image_digest}" || echo " WARNING: Error removing image: ${resp}"
+            fi
+
+            if [[ $push_old -eq 1 ]] ; then
+                echo "  Restoring '${image}' to old image"
+                push_manifest ${image} "${image_tag}" "${old_manifest}" || echo "  WARNING: Error pushing image: ${resp}"
+            fi
+
+        ;;
+
+    esac
+
+done

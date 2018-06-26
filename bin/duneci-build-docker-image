@@ -12,6 +12,29 @@ docker-build() {
   docker build ${docker_opts[@]:+"${docker_opts[@]}"} "${@}"
 }
 
+
+gitlab_server=$(sed 's|^\(https\?\)://[^@]\+@\([^/]\+\)/.*$|\1://\2|' <<<"${CI_REPOSITORY_URL}")
+
+get_bearer_token() {
+  token=$(curl -s --user "gitlab-ci-token:${CI_JOB_TOKEN}" "${gitlab_server}/jwt/auth?client_id=docker&offline_token=true&service=container_registry&scope=repository:$1:pull")
+  token=$(sed 's/.*:"\(.*\)"}/\1/' <<<"${token}")
+}
+
+get_manifest() {
+  local image
+  image=${1#*/}
+  get_bearer_token ${image}
+  manifest_data=$(curl -fs -D manifest_headers -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -H "Authorization: Bearer ${token}" "https://${CI_REGISTRY}/v2/${image}/manifests/$2")
+
+  if [[ $? -ne 0 ]] ; then
+    echo "Could not get manifest for '$1:$2'"
+    return 1
+  fi
+  manifest_digest=$(grep "^Docker-Content-Digest:" < manifest_headers | cut -d " " -f 2)
+  manifest_digest=${manifest_digest%$'\r'}
+  rm -f manifest_headers
+}
+
 docker_opts=()
 for var in ftp_proxy http_proxy https_proxy no_proxy; do
   if [[ -n "${!var:-}" ]]; then
@@ -19,9 +42,62 @@ for var in ftp_proxy http_proxy https_proxy no_proxy; do
   fi
 done
 
-if [[ "${DUNECI_DOCKER_CACHE:-1}" = 0 ]]; then
-  docker_opts+=(--no-cache)
+
+cache=yes
+
+stage_cache_var=DUNECI_DOCKER_CACHE_$({CI_JOB_STAGE^^} | tr ".-" "__")
+uppercase_job_name=${CI_JOB_NAME^^}
+image_cache_var=DUNECI_DOCKER_CACHE_$({uppercase_job_name%:*} | tr ".-" "__")
+tag_cache_var=${image_cache_var}_$({uppercase_job_name#*:} | tr ".-" "__")
+off_pattern="^(0|off|false|disable.?)"
+
+if [[ -v DUNECI_DOCKER_CACHE ]] ; then
+    if [[ ${DUNECI_DOCKER_CACHE,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at global level"
+        cache=no
+    else
+        echo "  Enabled caching at global level"
+        cache=yes
+    fi
 fi
+
+if [[ -v ${stage_cache_var} ]] ; then
+    if [[ ${!stage_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at stage level"
+        cache=no
+    else
+        echo "  Enabled caching at stage level"
+        cache=yes
+    fi
+fi
+
+if [[ -v ${image_cache_var} ]] ; then
+    if [[ ${!image_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at image level"
+        cache=no
+    else
+        echo "  Enabled caching at image level"
+        cache=yes
+    fi
+fi
+
+if [[ -v ${tag_cache_var} ]] ; then
+    if [[ ${!tag_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at tag level"
+        cache=no
+    else
+        echo "  Enabled caching at tag level"
+        cache=yes
+    fi
+fi
+
+if [[ ${cache} = yes ]] ; then
+    echo "Docker build cache enabled"
+else
+    echo "Docker build cache disabled"
+    docker_opts+=(--no-cache)
+fi
+
 
 if [[ $# -lt 2 ]]; then
   usage
@@ -47,6 +123,12 @@ done
 
 image="${1}"; shift
 
+# mangle tag for test
+untagged_image=${image%:*}
+tag=${image#*:}
+temp_tag="temp-${tag}-${CI_PIPELINE_ID}"
+temp_image="${untagged_image}:${temp_tag}"
+
 if [[ -n "${parallel}" && -v DUNECI_PARALLEL ]]; then
   docker_opts+=(--build-arg=DUNECI_PARALLEL="${DUNECI_PARALLEL}")
 fi
@@ -63,6 +145,47 @@ for d in "$@"; do
   cp -t "${builddir}" -- "${d}"/*
 done
 
-docker-build -t "${image}" "${builddir}"
+base_image=$(head -n 1 "${builddir}/Dockerfile" | cut -d " " -f 2)
+base_image_filename=$(sha256sum <<<"${base_image}" | cut -d " " -f 1)
+
+if [[ -f output/images/${base_image_filename}.image ]] ; then
+
+  if temp_base_image=$(grep '^temp_image:' output/images/${base_image_filename}.image | cut -d " " -f 2) ; then
+    echo "Replacing standard base image '${base_image}' with corresponding '${temp_base_image}' from current pipeline"
+    docker pull ${temp_base_image}
+    docker tag ${temp_base_image} ${base_image}
+  fi
+fi
+
+# pull existing image and use as cache to avoid endless rebuilds
+if [[ "$cache" = yes ]] ; then
+  echo "Trying to pull existing image as cache..."
+  if docker pull "${image}" ; then
+      echo "Enabled caching using existing image '${image}'"
+      docker_opts+=(--cache-from=${image})
+  else
+      echo "  Image not yet present in registry"
+  fi
+fi
+docker-build -t "${temp_image}" "${builddir}"
+
+# We push the resulting image to a temporary tag named after the pipeline id
+# We also put a file with information about the temporary tag and the desired final tag into a
+# file that will be published as an artifact.
+
+echo "Pushing image ${temp_image} to repository"
+docker push "${temp_image}"
+
+echo "Storing information about old and new image in artifact"
+mkdir -p output/images
+filename=$(sha256sum <<<"${image}" | cut -d " " -f 1)
+echo -e "image: ${image}\ntemp_image: ${temp_image}" > output/images/${filename}.image
+if get_manifest "${untagged_image}" "${tag}" ; then
+  echo "${manifest_data}" > output/images/${filename}.old-manifest
+  echo "${manifest_digest}" > output/images/${filename}.old-digest
+fi
+get_manifest "${untagged_image}" "${temp_tag}"
+echo "${manifest_data}" > output/images/${filename}.new-manifest
+echo "${manifest_digest}" > output/images/${filename}.new-digest
 
 rm -rf -- "${builddir}"
