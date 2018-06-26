@@ -42,9 +42,62 @@ for var in ftp_proxy http_proxy https_proxy no_proxy; do
   fi
 done
 
-if [[ "${DUNECI_DOCKER_CACHE:-1}" = 0 ]]; then
-  docker_opts+=(--no-cache)
+
+cache=yes
+
+stage_cache_var=DUNECI_DOCKER_CACHE_$({CI_JOB_STAGE^^} | tr ".-" "__")
+uppercase_job_name=${CI_JOB_NAME^^}
+image_cache_var=DUNECI_DOCKER_CACHE_$({uppercase_job_name%:*} | tr ".-" "__")
+tag_cache_var=${image_cache_var}_$({uppercase_job_name#*:} | tr ".-" "__")
+off_pattern="^(0|off|false|disable.?)"
+
+if [[ -v DUNECI_DOCKER_CACHE ]] ; then
+    if [[ ${DUNECI_DOCKER_CACHE,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at global level"
+        cache=no
+    else
+        echo "  Enabled caching at global level"
+        cache=yes
+    fi
 fi
+
+if [[ -v ${stage_cache_var} ]] ; then
+    if [[ ${!stage_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at stage level"
+        cache=no
+    else
+        echo "  Enabled caching at stage level"
+        cache=yes
+    fi
+fi
+
+if [[ -v ${image_cache_var} ]] ; then
+    if [[ ${!image_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at image level"
+        cache=no
+    else
+        echo "  Enabled caching at image level"
+        cache=yes
+    fi
+fi
+
+if [[ -v ${tag_cache_var} ]] ; then
+    if [[ ${!tag_cache_var,,} =~ ${off_pattern} ]] ; then
+        echo "  Disabled caching at tag level"
+        cache=no
+    else
+        echo "  Enabled caching at tag level"
+        cache=yes
+    fi
+fi
+
+if [[ ${cache} = yes ]] ; then
+    echo "Docker build cache enabled"
+else
+    echo "Docker build cache disabled"
+    docker_opts+=(--no-cache)
+fi
+
 
 if [[ $# -lt 2 ]]; then
   usage
