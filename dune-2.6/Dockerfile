@@ -1,4 +1,4 @@
-FROM duneci/base:10
+FROM registry.dune-project.org/docker/ci/debian:10
 ARG DUNECI_PARALLEL
 
 USER duneci

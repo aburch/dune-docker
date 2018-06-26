@@ -1,4 +1,5 @@
-FROM duneci/base:16.04
+FROM registry.dune-project.org/docker/ci/ubuntu:16.04
+ARG DUNECI_PARALLEL
 
 USER root
 WORKDIR /
