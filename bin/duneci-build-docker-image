@@ -145,7 +145,17 @@ for d in "$@"; do
   cp -t "${builddir}" -- "${d}"/*
 done
 
-docker-build -t "${image}" "${builddir}"
+# pull existing image and use as cache to avoid endless rebuilds
+if [[ "$cache" = yes ]] ; then
+  echo "Trying to pull existing image as cache..."
+  if docker pull "${image}" ; then
+      echo "Enabled caching using existing image '${image}'"
+      docker_opts+=(--cache-from=${image})
+  else
+      echo "  Image not yet present in registry"
+  fi
+fi
+docker-build -t "${temp_image}" "${builddir}"
 
 # We push the resulting image to a temporary tag named after the pipeline id
 # We also put a file with information about the temporary tag and the desired final tag into a
