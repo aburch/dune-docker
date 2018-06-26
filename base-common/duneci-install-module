@@ -82,6 +82,7 @@ fi
 opts="${DUNECI_OPTS:-/duneci/opts.gcc}"
 
 if [[ -v DUNECI_PARALLEL ]]; then
+    echo "Parallel run with ${DUNECI_PARALLEL} processes"
     set -- --make-opts="-j${DUNECI_PARALLEL}" "${@}"
 fi
 

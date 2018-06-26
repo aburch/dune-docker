@@ -18,6 +18,7 @@ fi
 
 parallel_opts=
 if [[ -v DUNECI_PARALLEL ]]; then
+  echo "Parallel run with ${DUNECI_PARALLEL} processes"
   parallel_opts="-j${DUNECI_PARALLEL}"
 fi
 
