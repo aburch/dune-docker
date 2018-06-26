@@ -1,4 +1,4 @@
-FROM duneci/dune:2.4
+FROM registry.dune-project.org/docker/ci/dune:2.4
 ARG DUNECI_PARALLEL
 
 USER root

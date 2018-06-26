@@ -1,4 +1,4 @@
-FROM duneci/dune:git
+FROM registry.dune-project.org/docker/ci/dune:git
 ARG DUNECI_PARALLEL
 
 USER duneci
