@@ -47,6 +47,12 @@ done
 
 image="${1}"; shift
 
+# mangle tag for test
+untagged_image=${image%:*}
+tag=${image#*:}
+temp_tag="temp-${tag}-${CI_PIPELINE_ID}"
+temp_image="${untagged_image}:${temp_tag}"
+
 if [[ -n "${parallel}" && -v DUNECI_PARALLEL ]]; then
   docker_opts+=(--build-arg=DUNECI_PARALLEL="${DUNECI_PARALLEL}")
 fi
